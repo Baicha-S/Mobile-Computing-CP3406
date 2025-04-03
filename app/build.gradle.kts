@@ -40,9 +40,11 @@ android {
 }
 
 dependencies {
+    // Koin Dependencies
     implementation("io.insert-koin:koin-core:3.4.3")
     implementation("io.insert-koin:koin-android:3.4.3")
     implementation("io.insert-koin:koin-androidx-compose:3.4.6")
+
     implementation(libs.androidx.core.ktx)
     implementation("androidx.compose.material:material:1.2.0")
     implementation(libs.androidx.lifecycle.runtime.ktx)
