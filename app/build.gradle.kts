@@ -40,11 +40,17 @@ android {
 }
 
 dependencies {
+    // Retrofit Dependencies
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.9.0") // Optional, for logging network requests
+    implementation("com.squareup.okhttp3:okhttp:4.9.0")
+    implementation("io.coil-kt:coil-compose:1.4.0") // Coil for image loading
     // Koin Dependencies
     implementation("io.insert-koin:koin-core:3.4.3")
     implementation("io.insert-koin:koin-android:3.4.3")
     implementation("io.insert-koin:koin-androidx-compose:3.4.6")
-
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
     implementation(libs.androidx.core.ktx)
     implementation("androidx.compose.material:material:1.2.0")
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -57,6 +63,7 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.4.0")
     implementation("androidx.compose.ui:ui:1.5.4")
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.runtime.livedata)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
