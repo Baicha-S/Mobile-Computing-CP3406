@@ -105,6 +105,13 @@ fun AppointmentPage(navController: NavHostController) {
         clickedCalendarElem?.toDos?.forEach {
             Text(if (it.contains("Day")) it else "- $it", fontWeight = FontWeight.SemiBold, fontSize = if (it.contains("Day")) 25.sp else 18.sp)
         }
+        Spacer(modifier = Modifier.height(16.dp))
+        Button(
+            onClick = { navController.navigate("addAppointment") }, // Navigate to Add Appointment Page
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFC3B091))
+        ) {
+            Text("Add Appointment", color = Color.Black)
+        }
     }
 }
 

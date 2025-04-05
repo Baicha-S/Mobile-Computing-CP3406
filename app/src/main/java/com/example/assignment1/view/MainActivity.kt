@@ -172,6 +172,7 @@ fun MainScreen() {
                 composable("pet_list") { PetList(Modifier.fillMaxSize()) } // Add this line
                 composable("home") { HomePage(Modifier.padding(innerPadding), navController) } // Pass navController here
                 composable("appointments") { AppointmentPage(navController) }
+                composable("addAppointment") { AddAppointmentPage(navController) }
                 composable("add_pet") { AddPetProfilePage(Modifier.padding(innerPadding), navController) } // Pass navController here
                 composable("exercise") { ExercisePage(Modifier.padding(innerPadding), navController) }
                 composable("guideline") { GuidelinePage(Modifier.padding(innerPadding)) }
