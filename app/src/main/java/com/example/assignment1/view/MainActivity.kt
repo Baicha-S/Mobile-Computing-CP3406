@@ -14,7 +14,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.Divider
+import androidx.compose.material.TabRowDefaults.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -30,7 +30,6 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import com.example.assignment1.R
 
 class MainActivity : ComponentActivity() {
@@ -166,11 +165,11 @@ fun MainScreen() {
         ) { innerPadding ->
             NavHost(navController = navController, startDestination = "home") {
 
-                    composable("pet_details/{petId}") { backStackEntry ->
-                        val petId = backStackEntry.arguments?.getString("petId")?.toIntOrNull() ?: 0
-                        PetDetailsPage(petId = petId)
-                    }
-                    composable("pet_list") { PetList(Modifier.fillMaxSize()) } // Add this line
+                composable("pet_details/{petId}") { backStackEntry ->
+                    val petId = backStackEntry.arguments?.getString("petId")?.toIntOrNull() ?: 0
+                    PetDetailsPage(petId = petId, navController)
+                }
+                composable("pet_list") { PetList(Modifier.fillMaxSize()) } // Add this line
                 composable("home") { HomePage(Modifier.padding(innerPadding), navController) } // Pass navController here
                 composable("appointments") { AppointmentPage(navController) }
                 composable("add_pet") { AddPetProfilePage(Modifier.padding(innerPadding), navController) } // Pass navController here

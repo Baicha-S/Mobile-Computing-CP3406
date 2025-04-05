@@ -37,14 +37,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
-import com.example.assignment1.data.Pet
 import com.example.assignment1.viewModel.HomeViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.compose.composable
+import com.example.assignment1.data.Pet
 
 
 @Composable
-fun HomePage(padding: Modifier, navController: NavHostController, viewModel: HomeViewModel = viewModel()) {
+fun HomePage(modifier: Modifier, navController: NavHostController, viewModel: HomeViewModel = viewModel()) {
     val pets by viewModel.pets.observeAsState(emptyList()) // Get pets from ViewModel
 
     LazyColumn(

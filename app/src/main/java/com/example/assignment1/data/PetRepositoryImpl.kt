@@ -14,8 +14,7 @@ class PetRepositoryImpl : PetRepository {
         )
     }
 
-    override suspend fun getPetById(id: Int): Pet? { // Made suspend
-        return getPets().find { it.id == id }
+    override suspend fun getPetById(id: Int): Pet? {
+        return getPets().find { it.id == id } //  return only a com.example.assignment1.data.Pet
     }
 }
-

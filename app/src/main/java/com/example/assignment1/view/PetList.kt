@@ -1,5 +1,6 @@
 package com.example.assignment1.view
 
+import com.example.assignment1.data.Pet
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,7 +13,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.assignment1.data.Pet
 import com.example.assignment1.viewModel.PetsViewModel
 import org.koin.androidx.compose.koinViewModel
 
@@ -35,7 +35,7 @@ fun PetList(modifier: Modifier) {
                     .padding(10.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                // Display pet information here
+
             }
         }
     }

@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 
 // Global constants for styling
-val boxColor = Color(0xFFD1BEA8) // Pet profile form button background color
+val boxColor = Color(0xFFD1BEA8) // com.example.assignment1.data.Pet profile form button background color
 
 @Composable
 fun AddPetProfilePage(padding: Modifier, navController: NavHostController) {
@@ -35,7 +35,7 @@ fun AddPetProfilePage(padding: Modifier, navController: NavHostController) {
         TextFieldWithLabel(
             value = petName,
             onValueChange = { petName = it },
-            label = "Pet Name"
+            label = "com.example.assignment1.data.Pet Name"
         )
         TextFieldWithLabel(
             value = petDOB,
