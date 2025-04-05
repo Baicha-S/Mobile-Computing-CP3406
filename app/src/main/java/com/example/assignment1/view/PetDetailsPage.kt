@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -77,6 +78,21 @@ fun PetDetailsPage(petId: Int, navController: NavController) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(text = "Appointment: ...")
             }
+            Text(
+                text = "Enter Medical History of ${it.name}",
+                modifier = Modifier.fillMaxWidth()
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Button(
+                onClick = { navController.popBackStack() },
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFC3B091)),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                Text(text = "Add History", color = Color.White)
+            }
+
             Button(
                 onClick = { navController.popBackStack() },
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFC3B091)),
@@ -88,6 +104,6 @@ fun PetDetailsPage(petId: Int, navController: NavController) {
             }
         }
     } ?: run {
-        Text(text = "Pet details not found")
+        Text(text = "Pet details not found") // When pet list is empty
     }
 }

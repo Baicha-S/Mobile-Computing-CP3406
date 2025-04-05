@@ -32,7 +32,6 @@ fun PetList(modifier: Modifier) {
             ) {
                 Text(text = pet.name)
                 Text(text = pet.species)
-                // Add more pet details here
             }
         }
     }

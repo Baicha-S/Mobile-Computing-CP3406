@@ -4,6 +4,7 @@ import com.example.assignment1.data.GuidelineRepository
 import com.example.assignment1.data.GuidelineRepositoryImpl
 import com.example.assignment1.data.PetRepository
 import com.example.assignment1.data.PetRepositoryImpl
+import com.example.assignment1.viewModel.ExerciseViewModel
 import com.example.assignment1.viewModel.GuidelineViewModel
 import com.example.assignment1.viewModel.HomeViewModel
 import com.example.assignment1.viewModel.PetDetailsViewModel
@@ -19,4 +20,5 @@ val appModules = module {
     viewModel { HomeViewModel(get()) }
     single<GuidelineRepository> { GuidelineRepositoryImpl() }
     viewModel { GuidelineViewModel(get()) }
+    viewModel { ExerciseViewModel(get()) }
 }
