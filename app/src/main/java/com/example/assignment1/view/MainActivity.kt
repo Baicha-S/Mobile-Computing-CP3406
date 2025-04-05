@@ -174,7 +174,7 @@ fun MainScreen() {
                 composable("appointments") { AppointmentPage(navController) }
                 composable("addAppointment") { AddAppointmentPage(navController) }
                 composable("add_pet") { AddPetProfilePage(Modifier.padding(innerPadding), navController) } // Pass navController here
-                composable("exercise") { ExercisePage(Modifier.padding(innerPadding), navController) }
+                composable("exercise") { ExercisePage(Modifier.padding(innerPadding)) }
                 composable("guideline") { GuidelinePage(Modifier.padding(innerPadding)) }
             }
         }

@@ -20,5 +20,5 @@ val appModules = module {
     viewModel { HomeViewModel(get()) }
     single<GuidelineRepository> { GuidelineRepositoryImpl() }
     viewModel { GuidelineViewModel(get()) }
-    viewModel { ExerciseViewModel(get()) }
+    viewModel { ExerciseViewModel() }
 }

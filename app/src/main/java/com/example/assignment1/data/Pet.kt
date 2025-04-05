@@ -19,7 +19,7 @@ data class Pet(
     val medicalHistory: MutableList<String> = mutableListOf(),
     // Exercise Tracker
     var exerciseGoalHours: Float = 3.5f, // 3.5 by default but user can adjust
-    var exerciseProgressHours: Float = 0.0f // Current progress
+    var exerciseProgressHours: Float = 3.0f // Current progress
 )
 
 @RequiresApi(Build.VERSION_CODES.O)
