@@ -107,7 +107,7 @@ fun MainScreen() {
                             onClick = {
                                 selectedItem = "appointments"
                                 navController.navigate("appointments") {
-                                    popUpTo("home") { inclusive = false } // Allow back navigation
+                                    popUpTo("home") { inclusive = false }
                                 }
                             }
                         )
@@ -169,11 +169,11 @@ fun MainScreen() {
                     val petId = backStackEntry.arguments?.getString("petId")?.toIntOrNull() ?: 0
                     PetDetailsPage(petId = petId, navController)
                 }
-                composable("pet_list") { PetList(Modifier.fillMaxSize()) } // Add this line
-                composable("home") { HomePage(Modifier.padding(innerPadding), navController) } // Pass navController here
+                composable("pet_list") { PetList(Modifier.fillMaxSize()) }
+                composable("home") { HomePage(Modifier.padding(innerPadding), navController) }
                 composable("appointments") { AppointmentPage(navController) }
-                composable("addAppointment") { AddAppointmentPage(navController) }
-                composable("add_pet") { AddPetProfilePage(Modifier.padding(innerPadding), navController) } // Pass navController here
+                composable("addAppointment") { AddAppointmentPage(navController)}
+                composable("add_pet") { AddPetProfilePage(Modifier.padding(innerPadding), navController) }
                 composable("exercise") { ExercisePage(Modifier.padding(innerPadding)) }
                 composable("guideline") { GuidelinePage(Modifier.padding(innerPadding)) }
             }

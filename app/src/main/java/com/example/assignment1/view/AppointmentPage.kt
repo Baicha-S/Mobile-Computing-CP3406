@@ -20,6 +20,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.drawscope.Stroke
@@ -35,24 +36,19 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.graphics.Path
+import com.example.assignment1.viewModel.AppointmentViewModel
+import java.time.LocalDateTime
 import java.time.YearMonth
 import java.util.Calendar
+import org.koin.androidx.compose.koinViewModel
 
-@RequiresApi(Build.VERSION_CODES.O) // Call API
+
+@RequiresApi(Build.VERSION_CODES.O)
 private fun createCalendarList(month: Int, year: Int): List<CalendarInput> {
     val daysInMonth = YearMonth.of(year, month).lengthOfMonth()
     val calendarInputs = mutableListOf<CalendarInput>()
     for (i in 1..daysInMonth) {
-        calendarInputs.add(
-            CalendarInput(
-                i,
-                toDos = listOf(
-                    "Day $i:",
-                    "Task 1 Bla Bla Bla",
-                    "Task 2 Test Test Tes"
-                )
-            )
-        )
+        calendarInputs.add(CalendarInput(i))
     }
     return calendarInputs
 }
@@ -60,18 +56,21 @@ private fun createCalendarList(month: Int, year: Int): List<CalendarInput> {
 private const val CALENDAR_ROWS = 5
 private const val CALENDAR_COLUMNS = 7
 
-@RequiresApi(Build.VERSION_CODES.O) // Request API for real time date and time of a particular year
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AppointmentPage(navController: NavHostController) {
+    val viewModel: AppointmentViewModel = koinViewModel()
     val calendar = Calendar.getInstance()
     val currentYear = calendar.get(Calendar.YEAR)
     var selectedMonth by remember { mutableStateOf(calendar.get(Calendar.MONTH) + 1) }
+    var selectedDate by remember { mutableStateOf<LocalDateTime?>(null) }
 
     val calendarInputList by remember(selectedMonth) {
         mutableStateOf(createCalendarList(selectedMonth, currentYear))
     }
 
-    var clickedCalendarElem by remember { mutableStateOf<CalendarInput?>(null) }
+    // Observe appointments from ViewModel using collectAsState()
+    val appointments by viewModel.appointmentList.collectAsState(initial = emptyList())
 
     Column(
         modifier = Modifier.fillMaxSize().padding(vertical = 60.dp, horizontal = 16.dp),
@@ -97,14 +96,25 @@ fun AppointmentPage(navController: NavHostController) {
 
         Calendar(
             calendarInput = calendarInputList,
-            onDayClick = { day -> clickedCalendarElem = calendarInputList.first { it.day == day } },
+            onDayClick = { day ->
+                val date = LocalDateTime.of(currentYear, selectedMonth, day, 0, 0)
+                selectedDate = date
+            },
             month = "${YearMonth.of(currentYear, selectedMonth).month}",
             modifier = Modifier.padding(10.dp).fillMaxWidth().aspectRatio(1.3f)
         )
 
-        clickedCalendarElem?.toDos?.forEach {
-            Text(if (it.contains("Day")) it else "- $it", fontWeight = FontWeight.SemiBold, fontSize = if (it.contains("Day")) 25.sp else 18.sp)
+        // Display appointments for the selected date
+        appointments.filter { appointment ->
+            selectedDate?.toLocalDate() == appointment.dateTime.toLocalDate()
+        }.forEach { appointment ->
+            Text(
+                text = "Event: ${appointment.description} at ${appointment.dateTime}, ${appointment.location}",
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 18.sp
+            )
         }
+
         Spacer(modifier = Modifier.height(16.dp))
         Button(
             onClick = { navController.navigate("addAppointment") }, // Navigate to Add Appointment Page

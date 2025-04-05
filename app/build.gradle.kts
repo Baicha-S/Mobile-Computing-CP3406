@@ -51,6 +51,10 @@ dependencies {
     implementation("io.insert-koin:koin-android:3.4.3")
     implementation("io.insert-koin:koin-androidx-compose:3.4.6")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
+
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1") // Required for coroutines
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1") // Required for view models
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.1")
     implementation(libs.androidx.core.ktx)
     implementation("androidx.compose.material:material:1.2.0")
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -64,6 +68,7 @@ dependencies {
     implementation("androidx.compose.ui:ui:1.5.4")
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.runtime.livedata)
+    implementation(libs.androidx.room.common)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

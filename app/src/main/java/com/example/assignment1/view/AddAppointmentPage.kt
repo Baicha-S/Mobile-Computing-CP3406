@@ -7,6 +7,7 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -18,18 +19,22 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.assignment1.data.Appointment
+import com.example.assignment1.viewModel.AppointmentViewModel
+import org.koin.androidx.compose.koinViewModel
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.Calendar
-import androidx.compose.material.icons.filled.AccessTime
-import androidx.compose.material3.ExperimentalMaterial3Api
 
-@OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AddAppointmentPage(navController: NavHostController) {
-    var petName by remember { mutableStateOf("") } // Pet name input
+    val viewModel: AppointmentViewModel = koinViewModel()
+
     var eventName by remember { mutableStateOf("") }
     var selectedDate by remember { mutableStateOf("") }
     var selectedTime by remember { mutableStateOf("") }
+    var location by remember { mutableStateOf("") } // Add location state
 
     val context = LocalContext.current
     val calendar = Calendar.getInstance()
@@ -42,7 +47,7 @@ fun AddAppointmentPage(navController: NavHostController) {
     val datePickerDialog = DatePickerDialog(
         context,
         { _, year, monthOfYear, dayOfMonth ->
-            selectedDate = "$dayOfMonth/${monthOfYear + 1}/$year"
+            selectedDate = "$year-${monthOfYear + 1}-${dayOfMonth}"
         }, year, month, day
     )
 
@@ -63,21 +68,21 @@ fun AddAppointmentPage(navController: NavHostController) {
         Text("Add New Appointment", fontSize = 24.sp, fontWeight = FontWeight.Bold)
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Pet Name Input
-        OutlinedTextField(
-            value = petName,
-            onValueChange = { petName = it },
-            label = { Text("Pet Name") },
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
         // Event Name Input
         OutlinedTextField(
             value = eventName,
             onValueChange = { eventName = it },
             label = { Text("Event Name") },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // Location Input
+        OutlinedTextField(
+            value = location,
+            onValueChange = { location = it },
+            label = { Text("Location") },
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -91,7 +96,10 @@ fun AddAppointmentPage(navController: NavHostController) {
             readOnly = true,
             modifier = Modifier.fillMaxWidth(),
             trailingIcon = {
-                Icon(Icons.Filled.DateRange, contentDescription = "Date", modifier = Modifier.clickable { datePickerDialog.show() })
+                Icon(
+                    Icons.Filled.DateRange,
+                    contentDescription = "Date",
+                    modifier = Modifier.clickable { datePickerDialog.show() })
             }
         )
 
@@ -105,15 +113,41 @@ fun AddAppointmentPage(navController: NavHostController) {
             readOnly = true,
             modifier = Modifier.fillMaxWidth(),
             trailingIcon = {
-                Icon(Icons.Filled.AccessTime, contentDescription = "Time", modifier = Modifier.clickable { timePickerDialog.show() })
+                Icon(
+                    Icons.Filled.AccessTime,
+                    contentDescription = "Time",
+                    modifier = Modifier.clickable { timePickerDialog.show() })
             }
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
         Button(
-            onClick = { navController.popBackStack() }, // Navigate back
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFC3B091))
+            onClick = {
+                if (eventName.isNotBlank() && selectedDate.isNotBlank() && selectedTime.isNotBlank() && location.isNotBlank()) { // Add location check
+                    try {
+                        val dateTimeString = "$selectedDate $selectedTime"
+                        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+                        val dateTime = LocalDateTime.parse(dateTimeString, formatter)
+
+                        val newAppointment = Appointment(
+                            dateTime = dateTime,
+                            description = eventName,
+                            location = location // Add location
+                        )
+
+                        // Crucially, save the appointment to the ViewModel:
+                        viewModel.addAppointment(newAppointment)
+
+                        navController.popBackStack() // Or navigate to a specific screen
+                    } catch (e: Exception) {
+                        // Handle parsing error
+                    }
+                } else {
+                    // Handle invalid input
+                }
+            },
+            // ... (button styling)
         ) {
             Text("Save Appointment", color = Color.Black)
         }
