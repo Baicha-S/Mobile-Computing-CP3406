@@ -30,6 +30,7 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.motionEventSpy
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -40,20 +41,38 @@ import androidx.navigation.NavHostController
 import com.example.assignment1.viewModel.HomeViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.assignment1.data.Pet
+import com.example.assignment1.ui.theme.BoxColor
+
+
 
 
 @Composable
-fun HomePage(modifier: Modifier, navController: NavHostController, viewModel: HomeViewModel = viewModel()) {
+fun HomePage(navController: NavHostController, viewModel: HomeViewModel = viewModel()) {
     val pets by viewModel.pets.observeAsState(emptyList()) // Get pets from ViewModel
 
-    LazyColumn(
+    Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(vertical = 60.dp, horizontal = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+            .padding(horizontal = 16.dp, vertical = 60.dp)
     ) {
-        items(pets) { pet ->
-            PetProfileBox(pet, navController)
+        //Welcome text
+        Text(
+            text = "Pet Wellness",
+            fontSize = 28.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.Black,
+            modifier = Modifier.padding(16.dp)
+        )
+        // Pet Profile Box
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(vertical = 16.dp, horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            items(pets) { pet ->
+                PetProfileBox(pet, navController)
+            }
         }
     }
 }
@@ -62,7 +81,7 @@ fun HomePage(modifier: Modifier, navController: NavHostController, viewModel: Ho
 fun PetProfileBox(pet: Pet, navController: NavController) {
     Box(
         modifier = Modifier
-            .background(color = Color(0xFFC3B091), shape = RoundedCornerShape(8.dp))
+            .background(color = BoxColor, shape = RoundedCornerShape(8.dp))
             .fillMaxWidth()
             .height(150.dp)
             .clickable {
@@ -77,7 +96,7 @@ fun PetProfileBox(pet: Pet, navController: NavController) {
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color(0xFFC3B091), shape = RoundedCornerShape(8.dp))
+                    .background(color = BoxColor, shape = RoundedCornerShape(8.dp))
                     .drawBehind {
                         drawRoundRect(
                             color = Color.Black.copy(alpha = 0.2f),
@@ -108,7 +127,7 @@ fun PetProfileBox(pet: Pet, navController: NavController) {
                 Spacer(modifier = Modifier.width(12.dp))
 
                 Text(
-                    text = pet.name, // Correct usage: pet.name
+                    text = pet.name,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black

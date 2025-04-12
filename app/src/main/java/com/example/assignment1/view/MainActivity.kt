@@ -22,8 +22,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.compose.runtime.*
 import androidx.compose.ui.draw.shadow
@@ -31,6 +29,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.assignment1.R
+import com.example.assignment1.navigation.AppNavigation
+import com.example.assignment1.ui.theme.Assignment1Theme
 
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
@@ -38,7 +38,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            MainScreen()
+            Assignment1Theme {
+                MainScreen()  // now wrapped in your custom theme with custom font
+            }
         }
     }
 }
@@ -74,7 +76,6 @@ fun MainScreen() {
                             elevation = 10.dp,
                         ))
                     NavigationBar(
-                        //modifier = Modifier.background(color = Color(0xFFFAF0E6))
                         containerColor = Color(0xFFFAF0E6),
                         modifier = Modifier
                     ) {
@@ -90,7 +91,6 @@ fun MainScreen() {
                             onClick = {
                                 selectedItem = "home"
                                 navController.navigate("home") {
-                                    // Avoid building up a large backstack
                                     popUpTo("home") { inclusive = true }
                                 }
                             }
@@ -123,7 +123,7 @@ fun MainScreen() {
                             onClick = {
                                 selectedItem = "add_pet"
                                 navController.navigate("add_pet") {
-                                    popUpTo("home") { inclusive = false } // Allow back navigation
+                                    popUpTo("home") { inclusive = false }
                                 }
                             }
                         )
@@ -139,7 +139,7 @@ fun MainScreen() {
                             onClick = {
                                 selectedItem = "exercise"
                                 navController.navigate("exercise") {
-                                    popUpTo("home") { inclusive = false } // Allow back navigation
+                                    popUpTo("home") { inclusive = false }
                                 }
                             }
                         )
@@ -155,7 +155,7 @@ fun MainScreen() {
                             onClick = {
                                 selectedItem = "guideline"
                                 navController.navigate("guideline") {
-                                    popUpTo("home") { inclusive = false } // Allow back navigation
+                                    popUpTo("home") { inclusive = false }
                                 }
                             }
                         )
@@ -163,20 +163,7 @@ fun MainScreen() {
                 }
             }
         ) { innerPadding ->
-            NavHost(navController = navController, startDestination = "home") {
-
-                composable("pet_details/{petId}") { backStackEntry ->
-                    val petId = backStackEntry.arguments?.getString("petId")?.toIntOrNull() ?: 0
-                    PetDetailsPage(petId = petId, navController)
-                }
-                composable("pet_list") { PetList(Modifier.fillMaxSize()) }
-                composable("home") { HomePage(Modifier.padding(innerPadding), navController) }
-                composable("appointments") { AppointmentPage(navController) }
-                composable("addAppointment") { AddAppointmentPage(navController)}
-                composable("add_pet") { AddPetProfilePage(Modifier.padding(innerPadding), navController) }
-                composable("exercise") { ExercisePage(Modifier.padding(innerPadding)) }
-                composable("guideline") { GuidelinePage(Modifier.padding(innerPadding)) }
-            }
+            AppNavigation(navController = navController, innerPadding = innerPadding)
         }
     }
 }
