@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -51,6 +52,10 @@ dependencies {
     implementation("io.insert-koin:koin-android:3.4.3")
     implementation("io.insert-koin:koin-androidx-compose:3.4.6")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
+    // Room
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    ksp(libs.room.compiler)
 
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1") // Required for coroutines
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1") // Required for view models
