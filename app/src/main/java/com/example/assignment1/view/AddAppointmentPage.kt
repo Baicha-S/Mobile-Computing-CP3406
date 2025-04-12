@@ -1,16 +1,30 @@
 package com.example.assignment1.view
 
+import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,8 +38,11 @@ import com.example.assignment1.viewModel.AppointmentViewModel
 import org.koin.androidx.compose.koinViewModel
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
+
 import java.util.Calendar
 
+@SuppressLint("DefaultLocale")
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AddAppointmentPage(navController: NavHostController) {
@@ -34,7 +51,13 @@ fun AddAppointmentPage(navController: NavHostController) {
     var eventName by remember { mutableStateOf("") }
     var selectedDate by remember { mutableStateOf("") }
     var selectedTime by remember { mutableStateOf("") }
-    var location by remember { mutableStateOf("") } // Add location state
+    var location by remember { mutableStateOf("") }
+
+    // Error messages
+    var eventNameError by remember { mutableStateOf<String?>(null) }
+    var locationError by remember { mutableStateOf<String?>(null) }
+    var dateError by remember { mutableStateOf<String?>(null) }
+    var timeError by remember { mutableStateOf<String?>(null) }
 
     val context = LocalContext.current
     val calendar = Calendar.getInstance()
@@ -47,15 +70,17 @@ fun AddAppointmentPage(navController: NavHostController) {
     val datePickerDialog = DatePickerDialog(
         context,
         { _, year, monthOfYear, dayOfMonth ->
-            selectedDate = "$year-${monthOfYear + 1}-${dayOfMonth}"
-        }, year, month, day
+            selectedDate = "$year-${monthOfYear + 1}-$dayOfMonth"
+        },
+        year, month, day
     )
 
     val timePickerDialog = TimePickerDialog(
         context,
-        { _, hourOfDay, minute ->
-            selectedTime = String.format("%02d:%02d", hourOfDay, minute)
-        }, hour, minute, true
+        { _, hourOfDay, minuteOfHour ->
+            selectedTime = String.format("%02d:%02d", hourOfDay, minuteOfHour)
+        },
+        hour, minute, true
     )
 
     Column(
@@ -68,27 +93,28 @@ fun AddAppointmentPage(navController: NavHostController) {
         Text("Add New Appointment", fontSize = 24.sp, fontWeight = FontWeight.Bold)
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Event Name Input
         OutlinedTextField(
             value = eventName,
             onValueChange = { eventName = it },
             label = { Text("Event Name") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            isError = eventNameError != null,
+            supportingText = { if (eventNameError != null) Text(eventNameError!!) }
         )
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Location Input
         OutlinedTextField(
             value = location,
             onValueChange = { location = it },
             label = { Text("Location") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            isError = locationError != null,
+            supportingText = { if (locationError != null) Text(locationError!!) }
         )
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Date Picker
         OutlinedTextField(
             value = selectedDate,
             onValueChange = { },
@@ -99,13 +125,15 @@ fun AddAppointmentPage(navController: NavHostController) {
                 Icon(
                     Icons.Filled.DateRange,
                     contentDescription = "Date",
-                    modifier = Modifier.clickable { datePickerDialog.show() })
-            }
+                    modifier = Modifier.clickable { datePickerDialog.show() }
+                )
+            },
+            isError = dateError != null,
+            supportingText = { if (dateError != null) Text(dateError!!) }
         )
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Time Picker
         OutlinedTextField(
             value = selectedTime,
             onValueChange = { },
@@ -116,38 +144,76 @@ fun AddAppointmentPage(navController: NavHostController) {
                 Icon(
                     Icons.Filled.AccessTime,
                     contentDescription = "Time",
-                    modifier = Modifier.clickable { timePickerDialog.show() })
-            }
+                    modifier = Modifier.clickable { timePickerDialog.show() }
+                )
+            },
+            isError = timeError != null,
+            supportingText = { if (timeError != null) Text(timeError!!) }
         )
 
         Spacer(modifier = Modifier.height(8.dp))
 
         Button(
             onClick = {
-                if (eventName.isNotBlank() && selectedDate.isNotBlank() && selectedTime.isNotBlank() && location.isNotBlank()) { // Add location check
+                // Reset errors
+                eventNameError = null
+                locationError = null
+                dateError = null
+                timeError = null
+
+                // Validate fields
+                if (eventName.isBlank()) eventNameError = "Event name cannot be blank"
+                if (location.isBlank()) locationError = "Location cannot be blank"
+                if (selectedDate.isBlank()) dateError = "Date cannot be blank"
+                if (selectedTime.isBlank()) timeError = "Time cannot be blank"
+
+                // If no errors, proceed with saving
+                if (eventNameError == null && locationError == null && dateError == null && timeError == null) {
                     try {
                         val dateTimeString = "$selectedDate $selectedTime"
+                        // Adjusted format pattern to handle single/double digits for month and day
                         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
-                        val dateTime = LocalDateTime.parse(dateTimeString, formatter)
+                        val formatter2 = DateTimeFormatter.ofPattern("yyyy-M-d HH:mm")
+                        val formatter3 = DateTimeFormatter.ofPattern("yyyy-M-dd HH:mm")
+                        val formatter4 = DateTimeFormatter.ofPattern("yyyy-MM-d HH:mm")
+                        var dateTime: LocalDateTime? = null;
+                        try {
+                            dateTime = LocalDateTime.parse(dateTimeString, formatter)
+                        } catch (e: DateTimeParseException) {
+                            try {
+                                dateTime = LocalDateTime.parse(dateTimeString, formatter2)
+                            } catch (e: DateTimeParseException) {
+                                try {
+                                    dateTime = LocalDateTime.parse(dateTimeString, formatter3)
+                                } catch (e: DateTimeParseException) {
+                                    try {
+                                        dateTime = LocalDateTime.parse(dateTimeString, formatter4)
+                                    } catch (e: DateTimeParseException) {
+                                        e.printStackTrace()
+                                    }
+                                }
+                            }
+                        }
 
-                        val newAppointment = Appointment(
-                            dateTime = dateTime,
-                            description = eventName,
-                            location = location // Add location
-                        )
+                        if (dateTime != null) {
+                            val newAppointment = Appointment(
+                                dateTime = dateTime,
+                                description = eventName,
+                                location = location
+                            )
 
-                        // Crucially, save the appointment to the ViewModel:
-                        viewModel.addAppointment(newAppointment)
+                            // insert to the database
+                            viewModel.insertAppointment(newAppointment)
 
-                        navController.popBackStack() // Or navigate to a specific screen
+                            navController.popBackStack()
+                        }
+
                     } catch (e: Exception) {
-                        // Handle parsing error
+                        e.printStackTrace()
                     }
-                } else {
-                    // Handle invalid input
                 }
             },
-            // ... (button styling)
+            modifier = Modifier.fillMaxWidth()
         ) {
             Text("Save Appointment", color = Color.Black)
         }

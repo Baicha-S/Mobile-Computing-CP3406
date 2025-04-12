@@ -1,5 +1,8 @@
 package com.example.assignment1.view
 
+import android.os.Build
+import androidx.annotation.RequiresApi
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -18,8 +21,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -38,14 +44,23 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import com.example.assignment1.data.Appointment
 import com.example.assignment1.data.Pet
+import com.example.assignment1.navigation.Screens
 import com.example.assignment1.ui.theme.BoxColor
+import com.example.assignment1.viewModel.AppointmentViewModel
 import com.example.assignment1.viewModel.HomeViewModel
+import java.time.format.DateTimeFormatter
+import org.koin.androidx.compose.koinViewModel
+import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
 
-
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun HomePage(navController: NavHostController, viewModel: HomeViewModel = viewModel()) {
-    val pets by viewModel.pets.observeAsState(emptyList()) // Get pets from ViewModel
+fun HomePage(navController: NavHostController, homeViewModel: HomeViewModel = viewModel()) {
+    val pets by homeViewModel.pets.observeAsState(emptyList()) // Get pets from ViewModel
+    val appointmentViewModel: AppointmentViewModel = koinViewModel()
+    val appointments by appointmentViewModel.appointmentList.collectAsState(initial = emptyList())
 
     Column(
         modifier = Modifier
@@ -58,17 +73,45 @@ fun HomePage(navController: NavHostController, viewModel: HomeViewModel = viewMo
             fontSize = 28.sp,
             fontWeight = FontWeight.Bold,
             color = Color.Black,
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(horizontal = 16.dp)
+        )
+        // Your Pets
+        Text(
+            text = "Your Pet",
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(horizontal = 16.dp)
         )
         // Pet Profile Box
         LazyColumn(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxWidth()
                 .padding(vertical = 16.dp, horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             items(pets) { pet ->
                 PetProfileBox(pet, navController)
+            }
+        }
+
+        // Upcoming Appointments Section
+        Text(
+            text = "Upcoming Appointments",
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(horizontal = 16.dp)
+        )
+
+        if (appointments.isEmpty()) {
+            Text("No upcoming appointments.", modifier = Modifier.padding(16.dp))
+        } else {
+            LazyColumn {
+                items(appointments) { appointment ->
+                    AppointmentListItem(appointment = appointment, onClick = {
+                        navController.navigate(Screens.AppointmentScreen.route)
+                    })
+                    HorizontalDivider()
+                }
             }
         }
     }
@@ -137,5 +180,39 @@ fun PetProfileBox(pet: Pet, navController: NavController) {
                 text = "Grooming next 2 weeks"
             )
         }
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+fun AppointmentListItem(appointment: Appointment, onClick: () -> Unit) {
+    val backgroundColor = getAppointmentIndicatorColor(appointment.dateTime)
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .background(color = backgroundColor.copy(alpha = 0.2f)) // Subtle background
+            .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Column(modifier = Modifier.weight(1f)) {
+            Text(appointment.description)
+            Text(appointment.location)
+            Text(appointment.dateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")))
+        }
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+fun getAppointmentIndicatorColor(dateTime: LocalDateTime): Color {
+    val now = LocalDateTime.now()
+    val daysUntilAppointment = ChronoUnit.DAYS.between(now, dateTime)
+
+    return when {
+        dateTime.isBefore(now) -> Color.Red // Overdue
+        daysUntilAppointment <= 7 -> Color.Yellow // Due within 7 days
+        else -> Color.Green // Not yet due
     }
 }

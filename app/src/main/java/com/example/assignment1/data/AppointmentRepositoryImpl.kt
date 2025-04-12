@@ -3,45 +3,34 @@ package com.example.assignment1.data
 import android.os.Build
 import androidx.annotation.RequiresApi
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import java.time.LocalDateTime
+import java.time.LocalTime
 
-@RequiresApi(Build.VERSION_CODES.O)
-class AppointmentRepositoryImpl : AppointmentRepository {
+class AppointmentRepositoryImpl(
+    private val appointmentDao: AppointmentDao
+) : AppointmentRepository {
 
-    private val appointments = mutableListOf<Appointment>()
-    private var nextId = 1 // Track the next available ID
-
-    init {
-        // Mocking some initial appointment data
-        appointments.add(
-            Appointment(
-                id = nextId++,
-                dateTime = LocalDateTime.of(2025, 4, 15, 10, 0),
-                location = "Downtown",
-                description = "Checkup"
-            )
-        )
-        appointments.add(
-            Appointment(
-                id = nextId++,
-                dateTime = LocalDateTime.of(2025, 4, 16, 14, 30),
-                location = "Downtown",
-                description = "Vaccination"
-            )
-        )
-    }
-
-    override suspend fun getAllAppointments(): List<Appointment> = withContext(Dispatchers.IO) {
-        appointments.toList() // Return a copy
-    }
+    override suspend fun getAllAppointments(): Flow<List<Appointment>> =
+        withContext(Dispatchers.IO) {
+            appointmentDao.getAllAppointments()
+        }
 
     override suspend fun insertAppointment(appointment: Appointment) = withContext(Dispatchers.IO) {
-        val newAppointment = appointment.copy(id = nextId++) // Assign a new ID
-        appointments.add(newAppointment)
+        appointmentDao.insertAppointment(appointment)
     }
 
-    override suspend fun getAppointmentsForDate(date: LocalDateTime): List<Appointment> = withContext(Dispatchers.IO) {
-        appointments.filter { it.dateTime.toLocalDate() == date.toLocalDate() }
+    @RequiresApi(Build.VERSION_CODES.O)
+    override suspend fun getAppointmentsForDate(date: LocalDateTime): List<Appointment> =
+        withContext(Dispatchers.IO) {
+            val startOfDay = date.toLocalDate().atStartOfDay()
+            val endOfDay = date.toLocalDate().atTime(LocalTime.MAX)
+            appointmentDao.getAppointmentsForDate(startOfDay, endOfDay)
+        }
+
+    override suspend fun deleteAppointment(appointment: Appointment) = withContext(Dispatchers.IO) {
+        appointmentDao.deleteAppointment(appointment)
     }
 }
+

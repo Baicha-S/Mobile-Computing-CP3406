@@ -13,7 +13,6 @@ class PetRepositoryImpl : PetRepository {
     private val pets: MutableList<Pet> = mutableListOf(
         Pet(1, "Bella", "Pomeranian", R.drawable.screenshot_2025_02_16_191409, LocalDate.parse("2019-02-20", DateTimeFormatter.ISO_DATE),"Male", "Egg"),
         Pet(3, "Charlie", "Pomeranian", R.drawable.screenshot_2025_02_16_191358, LocalDate.parse("2019-02-20", DateTimeFormatter.ISO_DATE),"Male", "Egg"),
-        Pet(5, "Cooper", "Pomeranian", R.drawable.screenshot_2025_02_16_191358, LocalDate.parse("2019-02-20", DateTimeFormatter.ISO_DATE),"Male", "Egg")
     )
 
     @RequiresApi(Build.VERSION_CODES.O)

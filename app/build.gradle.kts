@@ -55,6 +55,8 @@ dependencies {
     // Room
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
+    implementation(libs.androidx.adapters)
+    implementation(libs.androidx.core.i18n)
     ksp(libs.room.compiler)
 
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1") // Required for coroutines

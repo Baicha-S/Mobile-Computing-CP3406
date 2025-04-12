@@ -2,12 +2,15 @@ package com.example.assignment1.data
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import java.time.LocalDate
 import java.time.Period
-import java.time.format.DateTimeFormatter
 
+@Entity(tableName = "pets")
 data class Pet(
     // General Info
+    @PrimaryKey(autoGenerate = true)
     val id: Int,
     val name: String,
     val species: String,
@@ -15,8 +18,10 @@ data class Pet(
     val petDOB: LocalDate,
     val gender: String,
     val allergies: String,
+
     // Medical Tracker
     val medicalHistory: MutableList<String> = mutableListOf(),
+
     // Exercise Tracker
     var exerciseGoalHours: Float = 3.5f, // 3.5 by default but user can adjust
     var exerciseProgressHours: Float = 3.0f // Current progress
@@ -24,7 +29,7 @@ data class Pet(
 
 @RequiresApi(Build.VERSION_CODES.O)
 fun calculatePetAge(dob: LocalDate): String {
-    /*Calculates pet's age based on pet's DOB*/
+    //Calculates pet's age based on pet's DOB
     val currentDate = LocalDate.now()
     val period = Period.between(dob, currentDate)
     val years = period.years

@@ -1,6 +1,7 @@
 package com.example.assignment1.viewModel
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -18,19 +19,31 @@ class AppointmentViewModel(private val appointmentRepository: AppointmentReposit
 
     init {
         viewModelScope.launch {
-            _appointmentList.value = appointmentRepository.getAllAppointments()
+            appointmentRepository.getAllAppointments().collect { appointments ->
+                _appointmentList.value = appointments
+            }
         }
     }
 
-    fun addAppointment(appointment: Appointment) {
+    fun insertAppointment(appointment: Appointment) {
+        Log.d("AppointmentViewModel", "insertAppointment called: $appointment") // Add this line
         viewModelScope.launch {
             appointmentRepository.insertAppointment(appointment)
-            _appointmentList.value = appointmentRepository.getAllAppointments() // Fetch updated list
+            // No need to refreshAppointments here, as Flow will automatically update
         }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun getAppointmentsForDate(date: LocalDateTime): List<Appointment> {
-        return _appointmentList.value.filter { it.dateTime.toLocalDate() == date.toLocalDate() }
+    fun getAppointmentsForDateFromDb(date: LocalDateTime, onResult: (List<Appointment>) -> Unit) {
+        viewModelScope.launch {
+            val result = appointmentRepository.getAppointmentsForDate(date)
+            onResult(result)
+        }
+    }
+
+    fun deleteAppointment(appointment: Appointment) {
+        viewModelScope.launch {
+            appointmentRepository.deleteAppointment(appointment)
+        }
     }
 }

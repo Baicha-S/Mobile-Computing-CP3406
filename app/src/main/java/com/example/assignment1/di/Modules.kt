@@ -1,25 +1,37 @@
 package com.example.assignment1.di
 
+import com.example.assignment1.data.AppDatabase
+import com.example.assignment1.data.AppointmentRepositoryImpl
 import android.os.Build
 import androidx.annotation.RequiresApi
-import com.example.assignment1.data.GuidelineRepository
-import com.example.assignment1.data.GuidelineRepositoryImpl
-import com.example.assignment1.data.PetRepository
-import com.example.assignment1.data.PetRepositoryImpl
-import com.example.assignment1.viewModel.ExerciseViewModel
-import com.example.assignment1.viewModel.GuidelineViewModel
-import com.example.assignment1.viewModel.AppointmentViewModel
-import com.example.assignment1.viewModel.HomeViewModel
-import com.example.assignment1.viewModel.PetDetailsViewModel
-import com.example.assignment1.viewModel.PetsViewModel
+import androidx.room.Room
+import com.example.assignment1.data.*
+import com.example.assignment1.viewModel.*
+import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
-import com.example.assignment1.data.AppointmentRepository
-import com.example.assignment1.data.AppointmentRepositoryImpl
-
 
 @RequiresApi(Build.VERSION_CODES.O)
 val appModules = module {
+    // Room Database
+    single {
+        Room.databaseBuilder(
+            androidContext(),
+            AppDatabase::class.java,
+            "appointment-db"
+        ).build()
+    }
+
+    // DAO
+    single { get<AppDatabase>().appointmentDao() }
+
+    // Repository
+    single<AppointmentRepository> { AppointmentRepositoryImpl(get()) }
+
+    // ViewModel
+    viewModel { AppointmentViewModel(get()) }
+
+    // Existing dependencies
     single<PetRepository> { PetRepositoryImpl() }
     viewModel { PetsViewModel(get()) }
     viewModel { PetDetailsViewModel(get()) }
@@ -27,8 +39,4 @@ val appModules = module {
     single<GuidelineRepository> { GuidelineRepositoryImpl() }
     viewModel { GuidelineViewModel(get()) }
     viewModel { ExerciseViewModel() }
-    viewModel { AppointmentViewModel(get()) }
-    single<AppointmentRepository> { AppointmentRepositoryImpl() }
-    viewModel { AppointmentViewModel(get()) }
-
 }
