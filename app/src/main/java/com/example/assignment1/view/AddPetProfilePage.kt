@@ -1,5 +1,8 @@
 package com.example.assignment1.view
 
+import android.annotation.SuppressLint
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -10,20 +13,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.assignment1.viewModel.AddPetProfileViewModel
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.ui.text.input.KeyboardType
 
 // Global constants for styling
-val boxColor = Color(0xFFD1BEA8) // com.example.assignment1.data.Pet profile form button background color
+val boxColor = Color(0xFFD1BEA8)
 
+@SuppressLint("UnrememberedMutableState")
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun AddPetProfilePage(padding: Modifier, navController: NavHostController) {
-    // State for user inputs
-    var petName by remember { mutableStateOf("") }
-    var petDOB by remember { mutableStateOf("") }
-    var petGender by remember { mutableStateOf("") }
-    var petBreed by remember { mutableStateOf("") }
-    var petAllergies by remember { mutableStateOf("") }
+fun AddPetProfilePage(
+    navController: NavHostController,
+    viewModel: AddPetProfileViewModel
+) {
 
-    // Column to layout the form fields
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -31,54 +35,95 @@ fun AddPetProfilePage(padding: Modifier, navController: NavHostController) {
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Reusable function for text input fields
         TextFieldWithLabel(
-            value = petName,
-            onValueChange = { petName = it },
-            label = "com.example.assignment1.data.Pet Name"
+            value = viewModel.petName,
+            onValueChange = { viewModel.petName = it },
+            label = "Pet Name",
+            errorMessage = if (viewModel.petName.isEmpty() && viewModel.showError) "Name cannot be empty" else null
         )
         TextFieldWithLabel(
-            value = petDOB,
-            onValueChange = { petDOB = it },
-            label = "Birthday"
+            value = viewModel.petDOB,
+            onValueChange = { viewModel.petDOB = it },
+            label = "Birthday (YYYY-MM-DD)",
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+            errorMessage = if (viewModel.petDOB.isEmpty() && viewModel.showError) "Birthday cannot be empty" else null
         )
         TextFieldWithLabel(
-            value = petGender,
-            onValueChange = { petGender = it },
-            label = "Gender"
+            value = viewModel.petGender,
+            onValueChange = { viewModel.petGender = it },
+            label = "Gender",
+            errorMessage = if (viewModel.petGender.isEmpty() && viewModel.showError) "Gender cannot be empty" else null
         )
         TextFieldWithLabel(
-            value = petBreed,
-            onValueChange = { petBreed = it },
-            label = "Breed"
+            value = viewModel.petSpecies,
+            onValueChange = { viewModel.petSpecies = it },
+            label = "Species",
+            errorMessage = if (viewModel.petSpecies.isEmpty() && viewModel.showError) "Species cannot be empty" else null
         )
         TextFieldWithLabel(
-            value = petAllergies,
-            onValueChange = { petAllergies = it },
-            label = "Allergies"
+            value = viewModel.petAllergies,
+            onValueChange = { viewModel.petAllergies = it },
+            label = "Allergies",
+            errorMessage = if (viewModel.petAllergies.isEmpty() && viewModel.showError) "Allergies cannot be empty" else null
+        )
+        TextFieldWithLabel(
+            value = if (viewModel.imageResId == 0) "" else viewModel.imageResId.toString(),
+            onValueChange = {
+                viewModel.imageResId = it.toIntOrNull() ?: 0 // Handle invalid input
+            },
+            label = "Image Resource ID",
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            errorMessage = if (viewModel.imageResId == 0 && viewModel.showError) "Image ID cannot be empty" else null
         )
 
-        // Save button
         Spacer(modifier = Modifier.height(16.dp))
         SaveButton {
-            // Save pet profile logic
+            viewModel.savePet()
+            navController.popBackStack() // Navigate back to the previous screen
+        }
+
+        if (viewModel.saveSuccess) {
+            Text("Pet saved successfully!")
+        }
+
+        if (viewModel.saveError != null) {
+            Text(viewModel.saveError!!, color = Color.Red)
         }
     }
 }
 
-// Reusable function for OutlinedTextField with a label
 @Composable
-fun TextFieldWithLabel(value: String, onValueChange: (String) -> Unit, label: String) {
-    OutlinedTextField(
-        value = value,
-        onValueChange = onValueChange,
-        label = { Text(label) },
-        modifier = Modifier.fillMaxWidth()
-    )
-    Spacer(modifier = Modifier.height(8.dp))
+fun TextFieldWithLabel(
+    value: String,
+    onValueChange: (String) -> Unit,
+    label: String,
+    modifier: Modifier = Modifier,
+    readOnly: Boolean = false,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    errorMessage: String? = null
+) {
+    Column {
+        OutlinedTextField(
+            value = value,
+            onValueChange = onValueChange,
+            label = { Text(label) },
+            modifier = Modifier.fillMaxWidth().then(modifier),
+            readOnly = readOnly,
+            keyboardOptions = keyboardOptions,
+            isError = errorMessage != null
+        )
+        if (errorMessage != null) {
+            Text(
+                text = errorMessage,
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.labelSmall,
+                modifier = Modifier.padding(start = 16.dp)
+            )
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+    }
 }
 
-// Reusable Save button
 @Composable
 fun SaveButton(onClick: () -> Unit) {
     Button(

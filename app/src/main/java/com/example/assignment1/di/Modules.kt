@@ -19,24 +19,25 @@ val appModules = module {
             androidContext(),
             AppDatabase::class.java,
             "appointment-db"
-        ).build()
+        ).addMigrations(MIGRATION_1_2).build()
     }
 
-    // DAO
+    // DAOs
     single { get<AppDatabase>().appointmentDao() }
+    single { get<AppDatabase>().petDao() }
+    //single { get<AppDatabase>().guidelineDao() }
 
-    // Repository
+    // Repositories
     single<AppointmentRepository> { AppointmentRepositoryImpl(get()) }
+    single<PetRepository> { PetRepositoryImpl(get()) }
+    //single<GuidelineRepository> { GuidelineRepositoryImpl(get()) }
 
-    // ViewModel
+    // ViewModels
     viewModel { AppointmentViewModel(get()) }
-
-    // Existing dependencies
-    single<PetRepository> { PetRepositoryImpl() }
     viewModel { PetsViewModel(get()) }
     viewModel { PetDetailsViewModel(get()) }
     viewModel { HomeViewModel(get()) }
-    single<GuidelineRepository> { GuidelineRepositoryImpl() }
-    viewModel { GuidelineViewModel(get()) }
-    viewModel { ExerciseViewModel() }
+    viewModel { AddPetProfileViewModel(get()) }
+    //viewModel { GuidelineViewModel(get()) }
+    //viewModel { ExerciseViewModel() }
 }

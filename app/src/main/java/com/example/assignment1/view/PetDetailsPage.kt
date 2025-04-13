@@ -68,7 +68,7 @@ fun PetDetailsPage(petId: Int, navController: NavController) {
                 .background(color = Color(0xFFC3B091))
                 .padding(16.dp)){
 
-                Text(text = "Age: ${calculatePetAge(it.petDOB)}")
+                //Text(text = "Age: ${calculatePetAge(it.petDOB)}")
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(text = "Gender: ${it.gender}")
                 Spacer(modifier = Modifier.height(8.dp))

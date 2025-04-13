@@ -162,7 +162,7 @@ fun MainScreen() {
                 }
             }
         ) { innerPadding ->
-            AppNavigation(navController = navController, innerPadding = innerPadding)
+            AppNavigation(navController = navController)
         }
     }
 }

@@ -5,16 +5,22 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 
 @Dao
 interface PetDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(appointment: Appointment)
+    suspend fun insertPet(pet: Pet)
 
-    @Query("SELECT * FROM appointments")
-    suspend fun getAll(): List<Appointment>
+    @Query("SELECT * FROM pets")
+    suspend fun getAllPets(): List<Pet>
+
+    @Query("SELECT * FROM pets WHERE id = :petId")
+    suspend fun getPetById(petId: Int): Pet?
+
+    @Update
+    suspend fun updatePet(pet: Pet)
 
     @Delete
-    suspend fun delete(appointment: Appointment)
-
+    suspend fun deletePet(pet: Pet)
 }

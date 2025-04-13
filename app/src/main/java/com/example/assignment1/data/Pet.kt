@@ -7,20 +7,20 @@ import androidx.room.PrimaryKey
 import java.time.LocalDate
 import java.time.Period
 
+
 @Entity(tableName = "pets")
 data class Pet(
-    // General Info
-    @PrimaryKey(autoGenerate = true)
-    val id: Int,
-    val name: String,
-    val species: String,
-    val imageResId: Int,
-    val petDOB: LocalDate,
-    val gender: String,
-    val allergies: String,
+@PrimaryKey(autoGenerate = true) val id: Int = 0,
+val name: String,
+val petDOB: LocalDate,
+val gender: String,
+val species: String,
+val allergies: String,
+val imageResId: Int,
+
 
     // Medical Tracker
-    val medicalHistory: MutableList<String> = mutableListOf(),
+    //val medicalHistory: MutableList<String> = mutableListOf(),
 
     // Exercise Tracker
     var exerciseGoalHours: Float = 3.5f, // 3.5 by default but user can adjust

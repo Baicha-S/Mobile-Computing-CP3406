@@ -21,13 +21,23 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -57,8 +67,11 @@ import java.time.temporal.ChronoUnit
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun HomePage(navController: NavHostController, homeViewModel: HomeViewModel = viewModel()) {
-    val pets by homeViewModel.pets.observeAsState(emptyList()) // Get pets from ViewModel
+fun HomePage(navController: NavHostController, homeViewModel: HomeViewModel = koinViewModel()) {
+    val pets by homeViewModel.pets.observeAsState(emptyList())
+    val isLoadingPets by homeViewModel.isLoading.observeAsState(false)
+    val errorPets by homeViewModel.error.observeAsState(null)
+
     val appointmentViewModel: AppointmentViewModel = koinViewModel()
     val appointments by appointmentViewModel.appointmentList.collectAsState(initial = emptyList())
 
@@ -82,15 +95,22 @@ fun HomePage(navController: NavHostController, homeViewModel: HomeViewModel = vi
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(horizontal = 16.dp)
         )
-        // Pet Profile Box
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 16.dp, horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            items(pets) { pet ->
-                PetProfileBox(pet, navController)
+
+        if (isLoadingPets) {
+            CircularProgressIndicator(modifier = Modifier.padding(16.dp))
+        } else if (errorPets != null) {
+            Text("Error loading pets: $errorPets", modifier = Modifier.padding(16.dp))
+        } else {
+            // Pet Profile Box
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp, horizontal = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                items(pets) { pet ->
+                    PetProfileBox(pet, navController, homeViewModel) // Pass homeViewModel
+                }
             }
         }
 
@@ -118,7 +138,9 @@ fun HomePage(navController: NavHostController, homeViewModel: HomeViewModel = vi
 }
 
 @Composable
-fun PetProfileBox(pet: Pet, navController: NavController) {
+fun PetProfileBox(pet: Pet, navController: NavController, homeViewModel: HomeViewModel) {
+    var showDialog by remember { mutableStateOf(false) }
+
     Box(
         modifier = Modifier
             .background(color = BoxColor, shape = RoundedCornerShape(8.dp))
@@ -145,33 +167,39 @@ fun PetProfileBox(pet: Pet, navController: NavController) {
                             cornerRadius = CornerRadius(4.dp.toPx())
                         )
                     }
-                    .padding(8.dp)
+                    .padding(8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween // Added to put delete icon at the end
             ) {
-                Box(
-                    modifier = Modifier
-                        .size(48.dp)
-                        .clip(CircleShape)
-                        .background(Color.White),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Image(
-                        painter = painterResource(id = pet.imageResId), // Correct usage: pet.imageResId
-                        contentDescription = pet.name,
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Box(
                         modifier = Modifier
-                            .size(40.dp)
-                            .clip(CircleShape),
-                        contentScale = ContentScale.Crop
+                            .size(48.dp)
+                            .clip(CircleShape)
+                            .background(Color.White),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Image(
+                            painter = painterResource(id = pet.imageResId),
+                            contentDescription = pet.name,
+                            modifier = Modifier
+                                .size(40.dp)
+                                .clip(CircleShape),
+                            contentScale = ContentScale.Crop
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.width(12.dp))
+
+                    Text(
+                        text = pet.name,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black
                     )
                 }
-
-                Spacer(modifier = Modifier.width(12.dp))
-
-                Text(
-                    text = pet.name,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Black
-                )
+                IconButton(onClick = { showDialog = true }) {
+                    Icon(Icons.Filled.Delete, contentDescription = "Delete Pet")
+                }
             }
             Text(
                 text = "Up coming appointment"
@@ -181,8 +209,28 @@ fun PetProfileBox(pet: Pet, navController: NavController) {
             )
         }
     }
-}
 
+    if (showDialog) {
+        AlertDialog(
+            onDismissRequest = { showDialog = false },
+            title = { Text("Delete Pet?") },
+            text = { Text("Are you sure you want to delete ${pet.name}?") },
+            confirmButton = {
+                TextButton(onClick = {
+                    homeViewModel.deletePet(pet)
+                    showDialog = false
+                }) {
+                    Text("Delete")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDialog = false }) {
+                    Text("Cancel")
+                }
+            }
+        )
+    }
+}
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AppointmentListItem(appointment: Appointment, onClick: () -> Unit) {

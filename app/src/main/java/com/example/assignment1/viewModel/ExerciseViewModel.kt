@@ -1,5 +1,5 @@
 package com.example.assignment1.viewModel
-
+/*
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
@@ -42,3 +42,4 @@ class ExerciseViewModel : ViewModel() {
         }
     }
 }
+*/

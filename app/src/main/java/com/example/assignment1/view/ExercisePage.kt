@@ -1,5 +1,5 @@
 package com.example.assignment1.view
-
+/*
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
@@ -113,3 +113,4 @@ fun PetExerciseItem(exercise: Pet, onGoalChange: (Float) -> Unit, onProgressAdd:
         }
     }
 }
+*/

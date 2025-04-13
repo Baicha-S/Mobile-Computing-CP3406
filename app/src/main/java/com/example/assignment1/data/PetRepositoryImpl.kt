@@ -1,64 +1,44 @@
 package com.example.assignment1.data
 
-import android.os.Build
-import androidx.annotation.RequiresApi
-import com.example.assignment1.R
-import kotlinx.coroutines.delay
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
+class PetRepositoryImpl(private val petDao: PetDao) : PetRepository {
 
-class PetRepositoryImpl : PetRepository {
+    override suspend fun getPets(): List<Pet> = petDao.getAllPets()
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    private val pets: MutableList<Pet> = mutableListOf(
-        Pet(1, "Bella", "Pomeranian", R.drawable.screenshot_2025_02_16_191409, LocalDate.parse("2019-02-20", DateTimeFormatter.ISO_DATE),"Male", "Egg"),
-        Pet(3, "Charlie", "Pomeranian", R.drawable.screenshot_2025_02_16_191358, LocalDate.parse("2019-02-20", DateTimeFormatter.ISO_DATE),"Male", "Egg"),
-    )
+    override suspend fun getPetById(id: Int): Pet? = petDao.getPetById(id)
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    override suspend fun getPets(): List<Pet> {
-        delay(1000) //Simulate network delay
-        return pets
+    override suspend fun insertPet(pet: Pet) {
+        petDao.insertPet(pet)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    override suspend fun getPetById(id: Int): Pet? {
-        delay(1000) //Simulate network delay
-        return pets.find { it.id == id }
+    override suspend fun deletePet(pet: Pet) {
+        petDao.deletePet(pet)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    override suspend fun setExerciseGoal(petId: Int, hours: Float) {
-        delay(1000) //Simulate network delay
-        val pet = pets.find { it.id == petId }
-        pet?.exerciseGoalHours = hours
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    override suspend fun addExerciseProgress(petId: Int, hours: Float) {
-        delay(1000) // Simulate network delay
-        val pet = pets.find { it.id == petId }
+    /*override suspend fun setExerciseGoal(petId: Int, hours: Float) {
+        val pet = petDao.getPetById(petId)
         if (pet != null) {
-            pet.exerciseProgressHours += hours
+            pet.exerciseGoalHours = hours
+            petDao.updatePet(pet)
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    override suspend fun getPetExerciseData(petId: Int): Pet? {
-        delay(1000) //Simulate network delay
-        return pets.find { it.id == petId }
+    override suspend fun addExerciseProgress(petId: Int, hours: Float) {
+        val pet = petDao.getPetById(petId)
+        if (pet != null) {
+            pet.exerciseProgressHours += hours
+            petDao.updatePet(pet)
+        }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    override suspend fun getAllPetsExerciseData(): List<Pet> {
-        delay(1000) //Simulate network delay
-        return pets
-    }
+    override suspend fun getPetExerciseData(petId: Int): Pet? = petDao.getPetById(petId)
 
-    @RequiresApi(Build.VERSION_CODES.O)
+    override suspend fun getAllPetsExerciseData(): List<Pet> = petDao.getAllPets()
+
     override suspend fun addMedicalHistory(petId: Int, history: String) {
-        delay(1000) //Simulate network delay
-        val pet = pets.find { it.id == petId }
-        pet?.medicalHistory?.add(history)
-    }
+        val pet = petDao.getPetById(petId)
+        if (pet != null) {
+            pet.medicalHistory.add(history)
+            petDao.updatePet(pet)
+        }
+    }*/
 }
