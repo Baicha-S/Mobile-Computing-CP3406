@@ -23,3 +23,8 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
         )
     }
 }
+val MIGRATION_2_3 = object : Migration(2, 3){
+    override fun migrate(database: SupportSQLiteDatabase) {
+        database.execSQL("CREATE TABLE `medical_info` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `petId` INTEGER NOT NULL, `date` INTEGER NOT NULL, `clinicName` TEXT NOT NULL, `vetName` TEXT NOT NULL, `description` TEXT NOT NULL)")
+    }
+}

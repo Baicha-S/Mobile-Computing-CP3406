@@ -9,4 +9,5 @@ sealed class Screens(val route: String) {
     object GuidelineScreen : Screens("guideline")
     object PetDetailsScreen : Screens("pet_details/{petId}")
     object PetListScreen : Screens("pet_list")
+    object AddMedicalInfoScreen : Screens("add_medical_history/{petId}")
 }

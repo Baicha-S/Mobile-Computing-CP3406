@@ -7,6 +7,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
+import java.util.Date
 
 
 class Converters {
@@ -51,7 +52,6 @@ class Converters {
         }
     }
 
-    // === List<String> Converters ===
     @TypeConverter
     fun fromStringList(list: List<String>?): String? {
         return list?.joinToString(",")
@@ -62,4 +62,13 @@ class Converters {
         return data?.split(",")?.map { it.trim() }?.filter { it.isNotEmpty() }
     }
 
+    @TypeConverter
+    fun fromTimestamp(value: Long?): Date? {
+        return value?.let { Date(it) }
+    }
+
+    @TypeConverter
+    fun dateToTimestamp(date: Date?): Long? {
+        return date?.time
+    }
 }

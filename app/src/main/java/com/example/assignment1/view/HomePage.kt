@@ -25,7 +25,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -51,7 +50,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.assignment1.data.Appointment
@@ -80,7 +78,6 @@ fun HomePage(navController: NavHostController, homeViewModel: HomeViewModel = ko
             .fillMaxSize()
             .padding(horizontal = 16.dp, vertical = 60.dp)
     ) {
-        //Welcome text
         Text(
             text = "Pet Wellness",
             fontSize = 28.sp,
@@ -88,7 +85,6 @@ fun HomePage(navController: NavHostController, homeViewModel: HomeViewModel = ko
             color = Color.Black,
             modifier = Modifier.padding(horizontal = 16.dp)
         )
-        // Your Pets
         Text(
             text = "Your Pet",
             fontSize = 24.sp,
