@@ -9,6 +9,7 @@ import com.example.assignment1.data.*
 import com.example.assignment1.viewModel.*
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.core.scope.get
 import org.koin.dsl.module
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -30,7 +31,7 @@ val appModules = module {
     // Repositories
     single<AppointmentRepository> { AppointmentRepositoryImpl(get()) }
     single<PetRepository> { PetRepositoryImpl(get()) }
-    //single<GuidelineRepository> { GuidelineRepositoryImpl(get()) }
+    single<GuidelineRepository> { GuidelineRepositoryImpl() }
 
     // ViewModels
     viewModel { AppointmentViewModel(get()) }
@@ -38,6 +39,6 @@ val appModules = module {
     viewModel { PetDetailsViewModel(get()) }
     viewModel { HomeViewModel(get()) }
     viewModel { AddPetProfileViewModel(get()) }
-    //viewModel { GuidelineViewModel(get()) }
-    //viewModel { ExerciseViewModel() }
+    viewModel { GuidelineViewModel(get()) }
+    viewModel { ExerciseViewModel(get()) }
 }

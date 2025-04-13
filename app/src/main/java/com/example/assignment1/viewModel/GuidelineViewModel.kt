@@ -1,5 +1,5 @@
 package com.example.assignment1.viewModel
-/*
+
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -23,14 +23,14 @@ class GuidelineViewModel(private val repository: GuidelineRepository) : ViewMode
                 _guidelines.value = repository.getGuidelines()
             } catch (e: UnknownHostException) {
                 // Handle no internet connection
-                _guidelines.value = null;
+                _guidelines.value = null
                 // Log the error, or display a message to the user
             } catch (e: Exception) {
                 // Handle other exceptions
-                _guidelines.value = null;
+                _guidelines.value = null
                 // Log the error, or display a message to the user
             }
         }
     }
 }
-*/
+

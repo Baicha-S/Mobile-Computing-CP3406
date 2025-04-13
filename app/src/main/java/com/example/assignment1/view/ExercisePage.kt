@@ -1,5 +1,5 @@
 package com.example.assignment1.view
-/*
+
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
@@ -20,11 +20,12 @@ import com.example.assignment1.data.Pet
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun ExercisePage(padding: Modifier) {
+fun ExercisePage() {
     val viewModel: ExerciseViewModel = koinViewModel()
+    val pets by viewModel.pets.collectAsState(initial = emptyList())
 
     LazyColumn(
-        modifier = padding
+        modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
         verticalArrangement = Arrangement.Top,
@@ -38,24 +39,32 @@ fun ExercisePage(padding: Modifier) {
                 modifier = Modifier.padding(bottom = 16.dp)
             )
         }
-        items(viewModel.petList) { exercise -> // Use viewModel.petList
-            PetExerciseItem(exercise = exercise, onGoalChange = { hours -> viewModel.setExerciseGoal(exercise.id, hours) }, onProgressAdd = { hours -> viewModel.addExerciseProgress(exercise.id, hours)})
+        items(pets) { pet ->
+            PetExerciseItem(
+                pet = pet,
+                onGoalChange = { hours -> viewModel.setExerciseGoal(pet.id, hours) },
+                onProgressAdd = { hours -> viewModel.addExerciseProgress(pet.id, hours) }
+            )
             HorizontalDivider(thickness = 1.dp, color = Color.LightGray)
         }
     }
 }
 
 @Composable
-fun PetExerciseItem(exercise: Pet, onGoalChange: (Float) -> Unit, onProgressAdd: (Float) -> Unit) {
-    var goalHours by remember { mutableFloatStateOf(exercise.exerciseGoalHours) }
+fun PetExerciseItem(
+    pet: Pet,
+    onGoalChange: (Float) -> Unit,
+    onProgressAdd: (Float) -> Unit
+) {
+    var goalHours by remember { mutableFloatStateOf(pet.exerciseGoalHours) }
     var addHours by remember { mutableFloatStateOf(0f) }
 
-    val progress = remember(exercise.exerciseProgressHours, exercise.exerciseGoalHours) {
-        if (exercise.exerciseGoalHours > 0) {
-            val calculatedProgress = exercise.exerciseProgressHours / exercise.exerciseGoalHours
+    val progress = remember(pet.exerciseProgressHours, pet.exerciseGoalHours) {
+        if (pet.exerciseGoalHours > 0) {
+            val calculatedProgress = pet.exerciseProgressHours / pet.exerciseGoalHours
             Log.d(
                 "PetExerciseItem",
-                "Progress: $calculatedProgress, ProgressHours: ${exercise.exerciseProgressHours}, GoalHours: ${exercise.exerciseGoalHours}"
+                "Progress: $calculatedProgress, ProgressHours: ${pet.exerciseProgressHours}, GoalHours: ${pet.exerciseGoalHours}"
             )
             calculatedProgress
         } else {
@@ -77,8 +86,8 @@ fun PetExerciseItem(exercise: Pet, onGoalChange: (Float) -> Unit, onProgressAdd:
             .fillMaxWidth()
             .padding(8.dp)
     ) {
-        Text(text = "Pet: ${exercise.name}", fontWeight = FontWeight.Bold)
-        Text(text = "Hours Walked (Weekly): ${exercise.exerciseProgressHours} / ${exercise.exerciseGoalHours} hours")
+        Text(text = "Pet: ${pet.name}", fontWeight = FontWeight.Bold)
+        Text(text = "Hours Walked (Weekly): ${pet.exerciseProgressHours} / ${pet.exerciseGoalHours} hours")
 
         // Bigger Progression Bar with Dynamic Color
         LinearProgressIndicator(
@@ -92,7 +101,7 @@ fun PetExerciseItem(exercise: Pet, onGoalChange: (Float) -> Unit, onProgressAdd:
 
         OutlinedTextField(
             value = goalHours.toString(),
-            onValueChange = { goalHours = it.toFloatOrNull() ?: exercise.exerciseGoalHours },
+            onValueChange = { goalHours = it.toFloatOrNull() ?: pet.exerciseGoalHours },
             label = { Text("Set Goal (hours)") },
             modifier = Modifier.fillMaxWidth()
         )
@@ -113,4 +122,3 @@ fun PetExerciseItem(exercise: Pet, onGoalChange: (Float) -> Unit, onProgressAdd:
         }
     }
 }
-*/

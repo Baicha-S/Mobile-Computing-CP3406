@@ -1,5 +1,5 @@
 package com.example.assignment1.view
-/*
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -43,7 +43,7 @@ fun GuidelinePage(modifier: Modifier = Modifier, viewModel: GuidelineViewModel =
                 }
             }
         } ?: run {
-            Text(text = "Could not load data. Please check your internet connection.");
+            Text(text = "Could not load data. Please check your internet connection.")
         }
     }
 }
@@ -69,4 +69,3 @@ fun GuidelineCard(breedData: BreedData) {
         }
     }
 }
-*/
