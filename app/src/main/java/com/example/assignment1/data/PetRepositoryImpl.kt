@@ -1,19 +1,33 @@
 package com.example.assignment1.data
 
+import kotlinx.coroutines.flow.Flow
+
 class PetRepositoryImpl(private val petDao: PetDao) : PetRepository {
+    override suspend fun getPetById(petId: Int): Pet {
+        return petDao.getPetById(petId) ?: throw NoSuchElementException("Pet with ID $petId not found")
+    }
 
-    override suspend fun getPets(): List<Pet> = petDao.getAllPets()
+    override suspend fun getPets(): List<Pet> {
+        return petDao.getAllPets()
+    }
 
-    override suspend fun getPetById(id: Int): Pet? = petDao.getPetById(id)
 
     override suspend fun insertPet(pet: Pet) {
         petDao.insertPet(pet)
+    }
+
+    override suspend fun updatePet(pet: Pet) {
+        petDao.updatePet(pet) // Add this implementation
     }
 
     override suspend fun deletePet(pet: Pet) {
         petDao.deletePet(pet)
     }
 
+    override suspend fun resetExerciseProgress(petId: Int) {
+        petDao.resetExerciseProgress(petId)
+    }
+}
     /*override suspend fun setExerciseGoal(petId: Int, hours: Float) {
         val pet = petDao.getPetById(petId)
         if (pet != null) {
@@ -41,4 +55,4 @@ class PetRepositoryImpl(private val petDao: PetDao) : PetRepository {
             petDao.updatePet(pet)
         }
     }*/
-}
+

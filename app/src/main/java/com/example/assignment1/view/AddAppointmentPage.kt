@@ -17,9 +17,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -34,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.assignment1.data.Appointment
+import com.example.assignment1.ui.theme.BoxColor
 import com.example.assignment1.viewModel.AppointmentViewModel
 import org.koin.androidx.compose.koinViewModel
 import java.time.LocalDateTime
@@ -86,11 +89,18 @@ fun AddAppointmentPage(navController: NavHostController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+            .padding(horizontal = 16.dp, vertical = 60.dp),
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.Start
     ) {
-        Text("Add New Appointment", fontSize = 24.sp, fontWeight = FontWeight.Bold)
+        Text(
+            "Add New Appointment",
+            fontSize = 28.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.Black,
+            modifier = Modifier
+                .padding(horizontal = 16.dp))
+
         Spacer(modifier = Modifier.height(16.dp))
 
         OutlinedTextField(
@@ -213,9 +223,13 @@ fun AddAppointmentPage(navController: NavHostController) {
                     }
                 }
             },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = BoxColor,
+                contentColor = contentColorFor(BoxColor)
+            )
         ) {
-            Text("Save Appointment", color = Color.Black)
+            Text("Save Appointment", color = Color.Black, fontWeight = FontWeight.Bold, fontSize = 16.sp)
         }
     }
 }

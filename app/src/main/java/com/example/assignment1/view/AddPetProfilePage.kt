@@ -16,9 +16,10 @@ import androidx.navigation.NavHostController
 import com.example.assignment1.viewModel.AddPetProfileViewModel
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.text.input.KeyboardType
+import com.example.assignment1.ui.theme.BoxColor
 
 // Global constants for styling
-val boxColor = Color(0xFFD1BEA8)
+
 
 @SuppressLint("UnrememberedMutableState")
 @RequiresApi(Build.VERSION_CODES.O)
@@ -27,14 +28,23 @@ fun AddPetProfilePage(
     navController: NavHostController,
     viewModel: AddPetProfileViewModel
 ) {
-
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(vertical = 80.dp, horizontal = 16.dp),
+            .padding(vertical = 60.dp, horizontal = 16.dp),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Text(
+            text = "Add New Pet",
+            fontSize = 28.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.Black,
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .align(Alignment.Start)
+        )
+        Spacer(modifier = Modifier.padding(vertical = 16.dp))
         TextFieldWithLabel(
             value = viewModel.petName,
             onValueChange = { viewModel.petName = it },
@@ -129,13 +139,10 @@ fun SaveButton(onClick: () -> Unit) {
     Button(
         onClick = onClick,
         modifier = Modifier
-            .fillMaxWidth()
-            .height(50.dp),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = boxColor,
-            contentColor = contentColorFor(boxColor)
+            .fillMaxWidth(),
+        colors = ButtonDefaults.buttonColors(containerColor = BoxColor,
         )
     ) {
-        Text(text = "Save", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+        Text(text = "Save New Pet", color = Color.Black, fontWeight = FontWeight.Bold, fontSize = 16.sp)
     }
 }

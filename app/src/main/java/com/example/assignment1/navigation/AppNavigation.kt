@@ -19,6 +19,7 @@ import com.example.assignment1.view.HomePage
 import com.example.assignment1.view.PetDetailsPage
 import com.example.assignment1.view.PetList
 import com.example.assignment1.view.AddMedicalInfoPage
+import com.example.assignment1.view.EditPetPage
 import com.example.assignment1.viewModel.AddPetProfileViewModel
 import org.koin.androidx.compose.koinViewModel
 
@@ -48,6 +49,13 @@ fun AppNavigation(navController: NavHostController) {
             AddMedicalInfoPage(petId = petId, navController = navController)
         }
         composable(Screens.PetListScreen.route) { PetList(Modifier.fillMaxSize()) }
+        composable(
+            Screens.EditPetScreen.route,
+            arguments = listOf(navArgument("petId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val petId = backStackEntry.arguments?.getInt("petId") ?: 0
+            EditPetPage(petId = petId, navController = navController)
+        }
     }
 }
 

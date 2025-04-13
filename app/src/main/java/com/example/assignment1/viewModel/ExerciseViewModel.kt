@@ -42,4 +42,11 @@ class ExerciseViewModel(private val petDao: PetDao) : ViewModel() {
             }
         }
     }
+
+    fun resetExerciseProgress(petId: Int) {
+        viewModelScope.launch {
+            petDao.resetExerciseProgress(petId)
+            loadPets()
+        }
+    }
 }

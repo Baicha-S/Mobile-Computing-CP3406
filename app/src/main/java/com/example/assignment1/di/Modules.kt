@@ -41,4 +41,5 @@ val appModules = module {
     viewModel { ExerciseViewModel(get()) }
     viewModel { PetDetailsViewModel(get(), get()) }
     viewModel { AddMedicalInfoViewModel(get()) }
+    viewModel { EditPetViewModel(get()) }
 }

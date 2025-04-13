@@ -23,4 +23,7 @@ interface PetDao {
 
     @Delete
     suspend fun deletePet(pet: Pet)
+
+    @Query("UPDATE pets SET exerciseProgressHours = 0 WHERE id = :petId")
+    suspend fun resetExerciseProgress(petId: Int)
 }

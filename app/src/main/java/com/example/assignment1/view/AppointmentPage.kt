@@ -52,6 +52,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.assignment1.data.Appointment
 import com.example.assignment1.navigation.Screens
+import com.example.assignment1.ui.theme.BoxColor
 import com.example.assignment1.viewModel.AppointmentViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
@@ -95,7 +96,7 @@ fun AppointmentPage(navController: NavHostController) {
                 onClick = {
                     selectedMonth = if (selectedMonth == 1) 12 else selectedMonth - 1
                 },
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFC3B091))
+                colors = ButtonDefaults.buttonColors(containerColor = BoxColor)
             ) { Text("<", color = Color.Black) }
 
             Text("${YearMonth.of(currentYear, selectedMonth).month}", fontSize = 24.sp, fontWeight = FontWeight.Bold)
@@ -104,7 +105,7 @@ fun AppointmentPage(navController: NavHostController) {
                 onClick = {
                     selectedMonth = if (selectedMonth == 12) 1 else selectedMonth + 1
                 },
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFC3B091))
+                colors = ButtonDefaults.buttonColors(containerColor = BoxColor)
             ) { Text(">", color = Color.Black) }
         }
         // Calendar
@@ -127,9 +128,10 @@ fun AppointmentPage(navController: NavHostController) {
         Spacer(modifier = Modifier.height(16.dp))
         Button(
             onClick = { navController.navigate(Screens.AddAppointmentScreen.route) },
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFC3B091))
+            colors = ButtonDefaults.buttonColors(BoxColor),
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Add Appointment", color = Color.Black)
+            Text("Add Appointment", color = Color.Black, fontWeight = FontWeight.Bold, fontSize = 16.sp)
         }
     }
 }

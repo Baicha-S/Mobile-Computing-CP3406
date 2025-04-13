@@ -17,6 +17,8 @@ import org.koin.androidx.compose.koinViewModel
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import com.example.assignment1.data.Pet
+import com.example.assignment1.ui.theme.BoxColor
+
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -27,23 +29,24 @@ fun ExercisePage() {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(vertical = 60.dp, horizontal = 16.dp),
         verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.Start
     ) {
         item {
             Text(
                 text = "Pet Exercise Tracker",
-                fontSize = 24.sp,
+                fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 16.dp)
+                modifier = Modifier.padding(horizontal = 16.dp)
             )
         }
         items(pets) { pet ->
             PetExerciseItem(
                 pet = pet,
                 onGoalChange = { hours -> viewModel.setExerciseGoal(pet.id, hours) },
-                onProgressAdd = { hours -> viewModel.addExerciseProgress(pet.id, hours) }
+                onProgressAdd = { hours -> viewModel.addExerciseProgress(pet.id, hours) },
+                onResetProgress = { viewModel.resetExerciseProgress(pet.id) } // Pass the lambda here
             )
             HorizontalDivider(thickness = 1.dp, color = Color.LightGray)
         }
@@ -54,7 +57,8 @@ fun ExercisePage() {
 fun PetExerciseItem(
     pet: Pet,
     onGoalChange: (Float) -> Unit,
-    onProgressAdd: (Float) -> Unit
+    onProgressAdd: (Float) -> Unit,
+    onResetProgress: () -> Unit
 ) {
     var goalHours by remember { mutableFloatStateOf(pet.exerciseGoalHours) }
     var addHours by remember { mutableFloatStateOf(0f) }
@@ -91,12 +95,12 @@ fun PetExerciseItem(
 
         // Bigger Progression Bar with Dynamic Color
         LinearProgressIndicator(
-            progress = progress,
-            color = progressColor, // Set the color based on progress
+            progress = { progress },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 16.dp)
-                .height(30.dp)
+                .height(30.dp),
+            color = progressColor, // Set the color based on progress
         )
 
         OutlinedTextField(
@@ -105,10 +109,13 @@ fun PetExerciseItem(
             label = { Text("Set Goal (hours)") },
             modifier = Modifier.fillMaxWidth()
         )
+        Spacer(modifier = Modifier.height(8.dp))
 
-        Button(onClick = { onGoalChange(goalHours) }) {
-            Text("Set Goal")
+        Button(onClick = { onGoalChange(goalHours)},
+            colors = ButtonDefaults.buttonColors(containerColor = BoxColor)) {
+            Text("Set Goal", color = Color.Black, fontWeight = FontWeight.Bold, fontSize = 16.sp)
         }
+        Spacer(modifier = Modifier.height(8.dp))
 
         OutlinedTextField(
             value = addHours.toString(),
@@ -116,9 +123,17 @@ fun PetExerciseItem(
             label = { Text("Add Hours") },
             modifier = Modifier.fillMaxWidth()
         )
+        Spacer(modifier = Modifier.height(8.dp))
 
-        Button(onClick = { onProgressAdd(addHours) }) {
-            Text("Add Progress")
+        Button(onClick = { onProgressAdd(addHours) },
+            colors = ButtonDefaults.buttonColors(containerColor = BoxColor)) {
+            Text("Add Progress", color = Color.Black, fontWeight = FontWeight.Bold, fontSize = 16.sp)
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Button(onClick = { onResetProgress() },
+            colors = ButtonDefaults.buttonColors(containerColor = BoxColor)) {
+            Text("Reset Progress", color = Color.Black, fontWeight = FontWeight.Bold, fontSize = 16.sp)
         }
     }
 }

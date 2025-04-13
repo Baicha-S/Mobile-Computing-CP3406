@@ -2,7 +2,6 @@ package com.example.assignment1.view
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -21,22 +20,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -54,13 +44,14 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.assignment1.data.Appointment
 import com.example.assignment1.data.Pet
+import com.example.assignment1.data.calculatePetAge
 import com.example.assignment1.navigation.Screens
 import com.example.assignment1.ui.theme.BoxColor
 import com.example.assignment1.viewModel.AppointmentViewModel
 import com.example.assignment1.viewModel.HomeViewModel
-import java.time.format.DateTimeFormatter
 import org.koin.androidx.compose.koinViewModel
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -79,7 +70,7 @@ fun HomePage(navController: NavHostController, homeViewModel: HomeViewModel = ko
             .padding(horizontal = 16.dp, vertical = 60.dp)
     ) {
         Text(
-            text = "Pet Wellness",
+            text = "PawTrack",
             fontSize = 28.sp,
             fontWeight = FontWeight.Bold,
             color = Color.Black,
@@ -105,11 +96,10 @@ fun HomePage(navController: NavHostController, homeViewModel: HomeViewModel = ko
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 items(pets) { pet ->
-                    PetProfileBox(pet, navController, homeViewModel) // Pass homeViewModel
+                    PetProfileBox(pet, navController)
                 }
             }
         }
-
         // Upcoming Appointments Section
         Text(
             text = "Upcoming Appointments",
@@ -119,9 +109,13 @@ fun HomePage(navController: NavHostController, homeViewModel: HomeViewModel = ko
         )
 
         if (appointments.isEmpty()) {
-            Text("No upcoming appointments.", modifier = Modifier.padding(16.dp))
+            Text("No upcoming appointments.", modifier = Modifier.padding(horizontal = 16.dp))
         } else {
-            LazyColumn {
+            LazyColumn(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .fillMaxWidth()
+            ) {
                 items(appointments) { appointment ->
                     AppointmentListItem(appointment = appointment, onClick = {
                         navController.navigate(Screens.AppointmentScreen.route)
@@ -133,10 +127,9 @@ fun HomePage(navController: NavHostController, homeViewModel: HomeViewModel = ko
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun PetProfileBox(pet: Pet, navController: NavController, homeViewModel: HomeViewModel) {
-    var showDialog by remember { mutableStateOf(false) }
-
+fun PetProfileBox(pet: Pet, navController: NavController) {
     Box(
         modifier = Modifier
             .background(color = BoxColor, shape = RoundedCornerShape(8.dp))
@@ -163,8 +156,7 @@ fun PetProfileBox(pet: Pet, navController: NavController, homeViewModel: HomeVie
                             cornerRadius = CornerRadius(4.dp.toPx())
                         )
                     }
-                    .padding(8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween // Added to put delete icon at the end
+                    .padding(8.dp)
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Box(
@@ -193,40 +185,20 @@ fun PetProfileBox(pet: Pet, navController: NavController, homeViewModel: HomeVie
                         color = Color.Black
                     )
                 }
-                IconButton(onClick = { showDialog = true }) {
-                    Icon(Icons.Filled.Delete, contentDescription = "Delete Pet")
-                }
             }
-            Text(
-                text = "Up coming appointment"
-            )
-            Text(
-                text = "Grooming next 2 weeks"
-            )
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+            ) {
+                Text(text = "Age: ${calculatePetAge(pet.petDOB)}")
+                Text(text = "Species: ${pet.species}")
+            }
+
         }
     }
-
-    if (showDialog) {
-        AlertDialog(
-            onDismissRequest = { showDialog = false },
-            title = { Text("Delete Pet?") },
-            text = { Text("Are you sure you want to delete ${pet.name}?") },
-            confirmButton = {
-                TextButton(onClick = {
-                    homeViewModel.deletePet(pet)
-                    showDialog = false
-                }) {
-                    Text("Delete")
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { showDialog = false }) {
-                    Text("Cancel")
-                }
-            }
-        )
-    }
 }
+
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AppointmentListItem(appointment: Appointment, onClick: () -> Unit) {
