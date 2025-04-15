@@ -22,13 +22,9 @@ class GuidelineViewModel(private val repository: GuidelineRepository) : ViewMode
             try {
                 _guidelines.value = repository.getGuidelines()
             } catch (e: UnknownHostException) {
-                // Handle no internet connection
                 _guidelines.value = null
-                // Log the error, or display a message to the user
             } catch (e: Exception) {
-                // Handle other exceptions
                 _guidelines.value = null
-                // Log the error, or display a message to the user
             }
         }
     }

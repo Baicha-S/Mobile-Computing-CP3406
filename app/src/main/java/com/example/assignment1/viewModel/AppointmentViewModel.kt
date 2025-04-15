@@ -1,8 +1,6 @@
 package com.example.assignment1.viewModel
 
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.assignment1.data.Appointment
@@ -10,7 +8,6 @@ import com.example.assignment1.data.AppointmentRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
 
 class AppointmentViewModel(private val appointmentRepository: AppointmentRepository) : ViewModel() {
 
@@ -26,18 +23,9 @@ class AppointmentViewModel(private val appointmentRepository: AppointmentReposit
     }
 
     fun insertAppointment(appointment: Appointment) {
-        Log.d("AppointmentViewModel", "insertAppointment called: $appointment") // Add this line
+        Log.d("AppointmentViewModel", "insertAppointment called: $appointment")
         viewModelScope.launch {
             appointmentRepository.insertAppointment(appointment)
-            // No need to refreshAppointments here, as Flow will automatically update
-        }
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun getAppointmentsForDateFromDb(date: LocalDateTime, onResult: (List<Appointment>) -> Unit) {
-        viewModelScope.launch {
-            val result = appointmentRepository.getAppointmentsForDate(date)
-            onResult(result)
         }
     }
 

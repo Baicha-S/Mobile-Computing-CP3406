@@ -89,7 +89,7 @@ fun AddPetProfilePage(
         Spacer(modifier = Modifier.height(16.dp))
         SaveButton {
             viewModel.savePet()
-            navController.popBackStack() // Navigate back to the previous screen
+            navController.popBackStack()
         }
 
         if (viewModel.saveSuccess) {
@@ -117,7 +117,9 @@ fun TextFieldWithLabel(
             value = value,
             onValueChange = onValueChange,
             label = { Text(label) },
-            modifier = Modifier.fillMaxWidth().then(modifier),
+            modifier = Modifier
+                .fillMaxWidth()
+                .then(modifier),
             readOnly = readOnly,
             keyboardOptions = keyboardOptions,
             isError = errorMessage != null
@@ -140,9 +142,15 @@ fun SaveButton(onClick: () -> Unit) {
         onClick = onClick,
         modifier = Modifier
             .fillMaxWidth(),
-        colors = ButtonDefaults.buttonColors(containerColor = BoxColor,
+        colors = ButtonDefaults.buttonColors(
+            containerColor = BoxColor,
         )
     ) {
-        Text(text = "Save New Pet", color = Color.Black, fontWeight = FontWeight.Bold, fontSize = 16.sp)
+        Text(
+            text = "Save New Pet",
+            color = Color.Black,
+            fontWeight = FontWeight.Bold,
+            fontSize = 16.sp
+        )
     }
 }

@@ -1,13 +1,10 @@
-// Migrations.kt
 package com.example.assignment1.data
 
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
-// Migration from version 1 (initial app with appointments) to 2 (pets table added).
 val MIGRATION_1_2 = object : Migration(1, 2) {
     override fun migrate(database: SupportSQLiteDatabase) {
-        // Create the pets table with all columns, including petDOB.
         database.execSQL(
             "CREATE TABLE pets (" +
                     "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
@@ -18,7 +15,7 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
                     "exerciseGoalHours REAL NOT NULL, " +
                     "exerciseProgressHours REAL NOT NULL, " +
                     "allergies TEXT NOT NULL, " +
-                    "petDOB TEXT NOT NULL DEFAULT '1970-01-01'" + // Include petDOB here.
+                    "petDOB TEXT NOT NULL DEFAULT '2025-01-01'" +
                     ")"
         )
     }

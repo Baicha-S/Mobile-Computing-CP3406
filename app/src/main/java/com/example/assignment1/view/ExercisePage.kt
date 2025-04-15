@@ -46,7 +46,7 @@ fun ExercisePage() {
                 pet = pet,
                 onGoalChange = { hours -> viewModel.setExerciseGoal(pet.id, hours) },
                 onProgressAdd = { hours -> viewModel.addExerciseProgress(pet.id, hours) },
-                onResetProgress = { viewModel.resetExerciseProgress(pet.id) } // Pass the lambda here
+                onResetProgress = { viewModel.resetExerciseProgress(pet.id) }
             )
             HorizontalDivider(thickness = 1.dp, color = Color.LightGray)
         }
@@ -111,8 +111,10 @@ fun PetExerciseItem(
         )
         Spacer(modifier = Modifier.height(8.dp))
 
-        Button(onClick = { onGoalChange(goalHours)},
-            colors = ButtonDefaults.buttonColors(containerColor = BoxColor)) {
+        Button(
+            onClick = { onGoalChange(goalHours) },
+            colors = ButtonDefaults.buttonColors(containerColor = BoxColor)
+        ) {
             Text("Set Goal", color = Color.Black, fontWeight = FontWeight.Bold, fontSize = 16.sp)
         }
         Spacer(modifier = Modifier.height(8.dp))
@@ -125,15 +127,29 @@ fun PetExerciseItem(
         )
         Spacer(modifier = Modifier.height(8.dp))
 
-        Button(onClick = { onProgressAdd(addHours) },
-            colors = ButtonDefaults.buttonColors(containerColor = BoxColor)) {
-            Text("Add Progress", color = Color.Black, fontWeight = FontWeight.Bold, fontSize = 16.sp)
+        Button(
+            onClick = { onProgressAdd(addHours) },
+            colors = ButtonDefaults.buttonColors(containerColor = BoxColor)
+        ) {
+            Text(
+                "Add Progress",
+                color = Color.Black,
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp
+            )
         }
         Spacer(modifier = Modifier.height(8.dp))
 
-        Button(onClick = { onResetProgress() },
-            colors = ButtonDefaults.buttonColors(containerColor = BoxColor)) {
-            Text("Reset Progress", color = Color.Black, fontWeight = FontWeight.Bold, fontSize = 16.sp)
+        Button(
+            onClick = { onResetProgress() },
+            colors = ButtonDefaults.buttonColors(containerColor = BoxColor)
+        ) {
+            Text(
+                "Reset Progress",
+                color = Color.Black,
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp
+            )
         }
     }
 }

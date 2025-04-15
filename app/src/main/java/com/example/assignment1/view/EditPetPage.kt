@@ -86,16 +86,21 @@ fun EditPetPage(petId: Int, navController: NavController) {
                     .padding(vertical = 8.dp)
                     .fillMaxWidth(),
                 onClick = {
-                val updatedPet = petData.copy(
-                    name = name,
-                    gender = gender,
-                    species = species,
-                    allergies = allergies
+                    val updatedPet = petData.copy(
+                        name = name,
+                        gender = gender,
+                        species = species,
+                        allergies = allergies
+                    )
+                    viewModel.updatePet(updatedPet)
+                    navController.popBackStack()
+                }) {
+                Text(
+                    "Save Changes",
+                    color = Color.Black,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp
                 )
-                viewModel.updatePet(updatedPet)
-                navController.popBackStack()
-            }) {
-                Text("Save Changes", color = Color.Black, fontWeight = FontWeight.Bold, fontSize = 16.sp)
             }
         }
     } ?: run {

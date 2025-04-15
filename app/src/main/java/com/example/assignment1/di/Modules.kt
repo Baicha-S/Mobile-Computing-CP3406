@@ -24,7 +24,6 @@ val appModules = module {
     single { get<AppDatabase>().appointmentDao() }
     single { get<AppDatabase>().petDao() }
     single { get<AppDatabase>().medicalInfoDao() }
-    //single { get<AppDatabase>().guidelineDao() }
 
     // Repositories
     single<AppointmentRepository> { AppointmentRepositoryImpl(get()) }

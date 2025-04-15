@@ -99,7 +99,8 @@ fun AddAppointmentPage(navController: NavHostController) {
             fontWeight = FontWeight.Bold,
             color = Color.Black,
             modifier = Modifier
-                .padding(horizontal = 16.dp))
+                .padding(horizontal = 16.dp)
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -186,7 +187,7 @@ fun AddAppointmentPage(navController: NavHostController) {
                         val formatter2 = DateTimeFormatter.ofPattern("yyyy-M-d HH:mm")
                         val formatter3 = DateTimeFormatter.ofPattern("yyyy-M-dd HH:mm")
                         val formatter4 = DateTimeFormatter.ofPattern("yyyy-MM-d HH:mm")
-                        var dateTime: LocalDateTime? = null;
+                        var dateTime: LocalDateTime? = null
                         try {
                             dateTime = LocalDateTime.parse(dateTimeString, formatter)
                         } catch (e: DateTimeParseException) {
@@ -229,7 +230,12 @@ fun AddAppointmentPage(navController: NavHostController) {
                 contentColor = contentColorFor(BoxColor)
             )
         ) {
-            Text("Save Appointment", color = Color.Black, fontWeight = FontWeight.Bold, fontSize = 16.sp)
+            Text(
+                "Save Appointment",
+                color = Color.Black,
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp
+            )
         }
     }
 }

@@ -44,14 +44,15 @@ fun AddMedicalInfoPage(
             fontWeight = FontWeight.Bold,
             color = Color.Black,
             modifier = Modifier
-                .padding(horizontal = 16.dp))
+                .padding(horizontal = 16.dp)
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
 
         OutlinedTextField(
             value = date.toString(),
             onValueChange = { /* Handle date input */ },
-            label = { Text("Date")},
+            label = { Text("Date") },
             modifier = Modifier.fillMaxWidth()
         )
         OutlinedTextField(
@@ -83,24 +84,29 @@ fun AddMedicalInfoPage(
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(containerColor = BoxColor),
             onClick = {
-            clinicNameError = clinicName.isEmpty()
-            vetNameError = vetName.isEmpty()
-            descriptionError = description.isEmpty()
+                clinicNameError = clinicName.isEmpty()
+                vetNameError = vetName.isEmpty()
+                descriptionError = description.isEmpty()
 
-            if (!clinicNameError && !vetNameError && !descriptionError) {
-                val medicalInfo = MedicalInfo(
-                    petId = petId,
-                    date = date,
-                    clinicName = clinicName,
-                    vetName = vetName,
-                    description = description
-                )
-                viewModel.addMedicalInfo(medicalInfo)
-                navController.popBackStack()
-            }
+                if (!clinicNameError && !vetNameError && !descriptionError) {
+                    val medicalInfo = MedicalInfo(
+                        petId = petId,
+                        date = date,
+                        clinicName = clinicName,
+                        vetName = vetName,
+                        description = description
+                    )
+                    viewModel.addMedicalInfo(medicalInfo)
+                    navController.popBackStack()
+                }
 
-        }) {
-            Text("Add Medical History", color = Color.Black, fontWeight = FontWeight.Bold, fontSize = 16.sp)
+            }) {
+            Text(
+                "Add Medical History",
+                color = Color.Black,
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp
+            )
         }
     }
 }

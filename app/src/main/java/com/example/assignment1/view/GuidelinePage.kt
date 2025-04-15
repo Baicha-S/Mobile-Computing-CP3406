@@ -27,12 +27,12 @@ fun GuidelinePage(modifier: Modifier = Modifier, viewModel: GuidelineViewModel =
             .fillMaxSize()
             .padding(vertical = 60.dp, horizontal = 16.dp),
         horizontalAlignment = Alignment.Start
-    ){
+    ) {
         Text(
             text = "Tips about pet",
             fontSize = 30.sp,
             fontWeight = FontWeight.Bold
-            )
+        )
         breedResponse?.let { response ->
             LazyColumn(
                 modifier.padding(16.dp),
@@ -52,7 +52,8 @@ fun GuidelinePage(modifier: Modifier = Modifier, viewModel: GuidelineViewModel =
 @Composable
 fun GuidelineCard(breedData: BreedData) {
     Box(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
             .background(Color(0xFFC3B091))
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -63,7 +64,6 @@ fun GuidelineCard(breedData: BreedData) {
                 style = MaterialTheme.typography.headlineSmall
             )
             Spacer(modifier = Modifier.height(8.dp))
-            //Image loading or placeholder here.
             Spacer(modifier = Modifier.height(8.dp))
             Text(text = breedData.attributes.description)
         }

@@ -14,6 +14,8 @@ runtimeLivedata = "1.7.8"
 roomCommon = "2.6.1"
 adapters = "3.2.0-alpha11"
 coreI18n = "1.0.0"
+testng = "6.9.6"
+runner = "1.6.2"
 
 [libraries]
 room-runtime = { module = "androidx.room:room-runtime" , version.ref = "room" }
@@ -39,9 +41,11 @@ androidx-runtime-livedata = { group = "androidx.compose.runtime", name = "runtim
 androidx-room-common = { group = "androidx.room", name = "room-common", version.ref = "roomCommon" }
 androidx-adapters = { group = "androidx.databinding", name = "adapters", version.ref = "adapters" }
 androidx-core-i18n = { group = "androidx.core", name = "core-i18n", version.ref = "coreI18n" }
+testng = { group = "org.testng", name = "testng", version.ref = "testng" }
+androidx-runner = { group = "androidx.test", name = "runner", version.ref = "runner" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version = "1.9.24" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version = "2.1.20-2.0.0" }

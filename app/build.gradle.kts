@@ -44,7 +44,7 @@ dependencies {
     // Retrofit Dependencies
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-    implementation("com.squareup.okhttp3:logging-interceptor:4.9.0") // Optional, for logging network requests
+    implementation("com.squareup.okhttp3:logging-interceptor:4.9.0")
     implementation("com.squareup.okhttp3:okhttp:4.9.0")
     implementation("io.coil-kt:coil-compose:1.4.0") // Coil for image loading
     // Koin Dependencies
@@ -57,7 +57,14 @@ dependencies {
     implementation(libs.room.ktx)
     implementation(libs.androidx.adapters)
     implementation(libs.androidx.core.i18n)
+    implementation(libs.androidx.runner)
+    testImplementation(libs.testng)
     ksp(libs.room.compiler)
+    // Testing
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("org.mockito:mockito-core:4.8.0")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:4.1.0")
 
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1") // Required for coroutines
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1") // Required for view models

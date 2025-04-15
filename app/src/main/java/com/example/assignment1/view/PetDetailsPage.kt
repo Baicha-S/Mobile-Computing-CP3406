@@ -70,7 +70,12 @@ fun PetDetailsPage(petId: Int, navController: NavController) {
                 Row {
                     IconButton(
                         onClick = {
-                            navController.navigate(Screens.EditPetScreen.route.replace("{petId}", petId.toString()))
+                            navController.navigate(
+                                Screens.EditPetScreen.route.replace(
+                                    "{petId}",
+                                    petId.toString()
+                                )
+                            )
                         }
                     ) {
                         Icon(Icons.Filled.Edit, contentDescription = "Edit Pet")
@@ -124,7 +129,12 @@ fun PetDetailsPage(petId: Int, navController: NavController) {
 
             IconButton(
                 onClick = {
-                    navController.navigate(Screens.AddMedicalInfoScreen.route.replace("{petId}", petId.toString()))
+                    navController.navigate(
+                        Screens.AddMedicalInfoScreen.route.replace(
+                            "{petId}",
+                            petId.toString()
+                        )
+                    )
                 },
                 modifier = Modifier.align(Alignment.End)
             ) {
@@ -140,7 +150,12 @@ fun PetDetailsPage(petId: Int, navController: NavController) {
                     .fillMaxWidth()
                     .padding(16.dp)
             ) {
-                Text(text = "Back to Home", color = Color.Black, fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                Text(
+                    text = "Back to Home",
+                    color = Color.Black,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp
+                )
             }
         }
 

@@ -7,7 +7,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitClient {
-    private const val BASE_URL = "https://dogapi.dog/api/v2/" // link from https://dogapi.dog/docs/api-v2?ref=public_apis&utm_medium=website
+    private const val BASE_URL = "https://dogapi.dog/api/v2/"
 
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY

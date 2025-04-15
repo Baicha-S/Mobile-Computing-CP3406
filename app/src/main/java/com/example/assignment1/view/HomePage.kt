@@ -208,7 +208,7 @@ fun AppointmentListItem(appointment: Appointment, onClick: () -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = onClick)
-            .background(color = backgroundColor.copy(alpha = 0.2f)) // Subtle background
+            .background(color = backgroundColor.copy(alpha = 0.2f))
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {

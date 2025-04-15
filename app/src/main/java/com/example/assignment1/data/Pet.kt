@@ -10,14 +10,13 @@ import java.time.Period
 
 @Entity(tableName = "pets")
 data class Pet(
-@PrimaryKey(autoGenerate = true) val id: Int = 0,
-val name: String,
-val petDOB: LocalDate,
-val gender: String,
-val species: String,
-val allergies: String,
-val imageResId: Int,
-
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    val name: String,
+    val petDOB: LocalDate,
+    val gender: String,
+    val species: String,
+    val allergies: String,
+    val imageResId: Int,
     // Exercise Tracker
     var exerciseGoalHours: Float = 3.5f, // 3.5 by default but user can adjust
     var exerciseProgressHours: Float = 3.0f // Current progress

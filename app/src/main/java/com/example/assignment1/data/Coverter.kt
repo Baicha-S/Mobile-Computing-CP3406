@@ -18,7 +18,6 @@ class Converters {
     @RequiresApi(Build.VERSION_CODES.O)
     private val dateFormatter = DateTimeFormatter.ISO_LOCAL_DATE
 
-    // === LocalDateTime Converters ===
     @RequiresApi(Build.VERSION_CODES.O)
     @TypeConverter
     fun fromLocalDateTime(value: LocalDateTime?): String? {
@@ -35,7 +34,6 @@ class Converters {
         }
     }
 
-    // === LocalDate Converters ===
     @RequiresApi(Build.VERSION_CODES.O)
     @TypeConverter
     fun fromLocalDate(value: LocalDate?): String? {
@@ -50,16 +48,6 @@ class Converters {
         } catch (e: DateTimeParseException) {
             null
         }
-    }
-
-    @TypeConverter
-    fun fromStringList(list: List<String>?): String? {
-        return list?.joinToString(",")
-    }
-
-    @TypeConverter
-    fun toStringList(data: String?): List<String>? {
-        return data?.split(",")?.map { it.trim() }?.filter { it.isNotEmpty() }
     }
 
     @TypeConverter
